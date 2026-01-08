@@ -7,7 +7,7 @@ class SupabaseHandler {
         this.client = null;
         this.userEmail = null;
         this.userName = null;
-        this.userDisplayName = null; // With Dr. prefix
+        this.userDisplayName = null;
         this.userId = null;
         this.attemptsUsed = 0;
         this.isValidated = false;
@@ -54,6 +54,7 @@ class SupabaseHandler {
         if (!this.client || !this.userEmail) return false;
 
         try {
+            // Check if user exists in Supabase
             const { data: userData, error: userError } = await this.client
                 .from('clinical_users')
                 .select('*')
@@ -65,12 +66,16 @@ class SupabaseHandler {
             }
 
             if (userData) {
+                // User exists - load from database
+                console.log('✅ User found in database:', userData.email);
                 this.userId = userData.id;
-                this.userName = userData.name;
-                this.userDisplayName = this.formatDoctorName(userData.name);
+                this.userName = userData.name || this.userEmail.split('@')[0];
+                this.userDisplayName = userData.display_name || this.formatDoctorName(this.userName);
                 this.attemptsUsed = userData.attempts_used || 0;
                 await this.loadUserAttempts();
             } else {
+                // New user - fetch from Magento first
+                console.log('🔍 New user, fetching from Magento...');
                 await this.validateWithMagento();
                 await this.createUser();
             }
@@ -99,6 +104,8 @@ class SupabaseHandler {
     }
 
     async validateWithMagento() {
+        console.log('🔍 Calling Magento API for:', this.userEmail);
+        
         try {
             const response = await fetch(CONFIG.urls.magentoApi, {
                 method: 'POST',
@@ -109,26 +116,63 @@ class SupabaseHandler {
                 })
             });
 
+            console.log('📡 Magento response status:', response.status);
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
             const result = await response.json();
+            console.log('📦 Magento API result:', result);
 
             if (result.success && result.customer) {
-                this.userName = `${result.customer.firstname} ${result.customer.lastname}`;
-                this.userDisplayName = this.formatDoctorName(this.userName);
+                const firstName = result.customer.firstname || '';
+                const lastName = result.customer.lastname || '';
+                
+                if (firstName || lastName) {
+                    this.userName = `${firstName} ${lastName}`.trim();
+                    this.userDisplayName = this.formatDoctorName(this.userName);
+                    console.log('✅ Name from Magento:', this.userName);
+                    console.log('✅ Display name:', this.userDisplayName);
+                } else {
+                    console.warn('⚠️ Magento returned empty name, using email');
+                    this.setFallbackName();
+                }
             } else {
-                this.userName = this.userEmail.split('@')[0];
-                this.userDisplayName = this.formatDoctorName(this.userName);
+                console.warn('⚠️ Magento customer not found:', result.error || 'Unknown error');
+                this.setFallbackName();
             }
         } catch (err) {
-            console.warn('Magento validation failed:', err);
-            this.userName = this.userEmail.split('@')[0];
-            this.userDisplayName = this.formatDoctorName(this.userName);
+            console.error('❌ Magento API error:', err.message);
+            this.setFallbackName();
         }
+    }
+
+    setFallbackName() {
+        // Use email username as fallback
+        const emailUsername = this.userEmail.split('@')[0];
+        // Capitalize first letter and replace dots/underscores with spaces
+        const cleanName = emailUsername
+            .replace(/[._-]/g, ' ')
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+        
+        this.userName = cleanName;
+        this.userDisplayName = this.formatDoctorName(cleanName);
+        console.log('🔄 Using fallback name:', this.userName);
+        console.log('🔄 Fallback display name:', this.userDisplayName);
     }
 
     async createUser() {
         if (!this.client) return;
 
         try {
+            console.log('💾 Creating new user in Supabase...');
+            console.log('   Email:', this.userEmail);
+            console.log('   Name:', this.userName);
+            console.log('   Display Name:', this.userDisplayName);
+
             const { data, error } = await this.client
                 .from('clinical_users')
                 .insert([{
@@ -137,6 +181,8 @@ class SupabaseHandler {
                     display_name: this.userDisplayName,
                     attempts_used: 0,
                     best_score: 0,
+                    best_accuracy: 0,
+                    total_games: 0,
                     created_at: new Date().toISOString()
                 }])
                 .select()
@@ -146,9 +192,9 @@ class SupabaseHandler {
 
             this.userId = data.id;
             this.attemptsUsed = 0;
-            console.log('✅ User created:', this.userId);
+            console.log('✅ User created successfully:', this.userId);
         } catch (err) {
-            console.error('Create user error:', err);
+            console.error('❌ Create user error:', err);
         }
     }
 
