@@ -49,7 +49,7 @@
                     </svg>
                 </div>
                 <h2 class="modal-title">🦷 Welcome, Dental Pro!</h2>
-                <p class="modal-subtitle">Enter your PinkBlue email to start the challenge</p>
+                <p class="modal-subtitle">Enter your PinkBlue email to start</p>
             </div>
             
             <div class="email-form">
@@ -90,10 +90,10 @@
                 </svg>
             </div>
             <h2 class="modal-title">Practice Mode Activated! 🎯</h2>
-            <p class="modal-subtitle">You've used your 2 reward attempts. Keep practicing to sharpen your skills!</p>
+            <p class="modal-subtitle" id="practiceModeMessage">You've used your 2 reward attempts. Keep practicing!</p>
             
             <div class="reward-reminder">
-                <h3>🏆 Your Best Rewards:</h3>
+                <h3>🏆 Your Previous Rewards:</h3>
                 <div id="previousRewardsDisplay"></div>
             </div>
             
@@ -105,7 +105,7 @@
 
     <!-- Rules Modal -->
     <div class="modal-overlay" id="rulesModal">
-        <div class="modal-container specialty-modal glass-card">
+        <div class="modal-container rules-modal glass-card">
             <div class="modal-glow"></div>
             
             <div class="modal-header">
@@ -115,29 +115,36 @@
                     </svg>
                 </div>
                 <h2 class="modal-title">🎮 How to Play</h2>
-                <p class="modal-subtitle">Master clinical procedures, win awesome rewards!</p>
+                <p class="modal-subtitle">Master clinical procedures, win rewards!</p>
             </div>
 
-            <div class="rules-grid">
-                <div class="rule-card">
-                    <div class="rule-number">1</div>
-                    <h4>Choose Your Specialty</h4>
-                    <p>Pick from 5 different clinical procedures</p>
+            <!-- Compact Welcome Message -->
+            <div class="welcome-banner">
+                <p id="welcomeText">Welcome, Doctor! 🎯</p>
+            </div>
+
+            <!-- Compact Top Leaderboard -->
+            <div class="mini-leaderboard">
+                <div class="mini-leader-header">
+                    <h4>🏆 Top Performers</h4>
+                    <button class="view-all-btn" id="viewLeaderboardBtn">View All</button>
                 </div>
-                <div class="rule-card">
-                    <div class="rule-number">2</div>
-                    <h4>Arrange Steps Correctly</h4>
-                    <p>Click steps in the correct clinical sequence</p>
+                <div id="topLeaderboard"></div>
+            </div>
+
+            <!-- Compact Rules -->
+            <div class="rules-compact">
+                <div class="rule-item">
+                    <span class="rule-icon">1️⃣</span>
+                    <span>Choose procedure</span>
                 </div>
-                <div class="rule-card">
-                    <div class="rule-number">3</div>
-                    <h4>Win Rewards</h4>
-                    <p>Perfect sequence = Premium rewards! 🎁</p>
+                <div class="rule-item">
+                    <span class="rule-icon">2️⃣</span>
+                    <span>Click steps in order</span>
                 </div>
-                <div class="rule-card">
-                    <div class="rule-number">4</div>
-                    <h4>2 Reward Attempts</h4>
-                    <p>After 2 tries, enter practice mode</p>
+                <div class="rule-item">
+                    <span class="rule-icon">3️⃣</span>
+                    <span>Win rewards!</span>
                 </div>
             </div>
 
@@ -162,13 +169,36 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                     </svg>
                 </div>
-                <h2 class="modal-title">Choose Your Clinical Challenge</h2>
+                <h2 class="modal-title">Choose Your Challenge</h2>
                 <p class="modal-subtitle">Select a procedure to master</p>
             </div>
 
             <div class="specialty-grid" id="procedureGrid">
-                <!-- Procedures will be loaded dynamically -->
+                <!-- Procedures loaded dynamically -->
             </div>
+        </div>
+    </div>
+
+    <!-- Full Leaderboard Modal -->
+    <div class="modal-overlay" id="leaderboardModal">
+        <div class="modal-container leaderboard-full glass-card">
+            <div class="modal-header">
+                <div class="header-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                    </svg>
+                </div>
+                <h2 class="modal-title">🏆 Hall of Fame</h2>
+                <p class="modal-subtitle">Top clinical masters</p>
+            </div>
+
+            <div class="leaderboard-container">
+                <div id="leaderboardList"></div>
+            </div>
+
+            <button class="btn-primary full-width" id="closeLeaderboardBtn">
+                Close
+            </button>
         </div>
     </div>
 
@@ -202,45 +232,24 @@
             </div>
         </header>
 
-        <!-- Game Info -->
+        <!-- Compact Game Info -->
         <div class="game-info-card glass-card">
-            <div class="info-icon">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
             <div class="info-content">
-                <h2 id="procedureTitle">Loading Procedure...</h2>
-                <p id="procedureDescription">Click steps in the correct clinical sequence</p>
+                <h2 id="procedureTitle">Loading...</h2>
+                <p id="procedureDescription">Click steps in order</p>
             </div>
         </div>
 
-        <!-- Instructions -->
-        <div class="instructions-card glass-card">
-            <div class="instruction-item">
-                <div class="instruction-number">1</div>
-                <p>Click each step in order</p>
-            </div>
-            <div class="instruction-item">
-                <div class="instruction-number">2</div>
-                <p>Numbers appear as you select</p>
-            </div>
-            <div class="instruction-item">
-                <div class="instruction-number">3</div>
-                <p>Click again to deselect</p>
-            </div>
+        <!-- Compact Instructions -->
+        <div class="instructions-compact glass-card">
+            <span>💡 Click steps in correct sequence</span>
+            <span class="step-counter">
+                <span id="selectedCount">0</span>/<span id="totalCount">0</span>
+            </span>
         </div>
 
         <!-- Steps Pool -->
         <div class="steps-pool-card glass-card">
-            <div class="zone-header">
-                <div class="zone-indicator"></div>
-                <h3>Clinical Steps (Shuffled)</h3>
-                <div class="step-counter">
-                    <span id="selectedCount">0</span>/<span id="totalCount">0</span> selected
-                </div>
-            </div>
-            
             <div class="steps-pool-click" id="stepsPool">
                 <!-- Steps loaded dynamically -->
             </div>
@@ -254,7 +263,7 @@
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    <span>Check My Sequence</span>
+                    <span>Check Sequence</span>
                 </div>
             </button>
         </div>
@@ -271,8 +280,8 @@
                 </div>
             </div>
             
-            <h2 class="result-title" id="resultTitle">Perfect Sequence! 🎉</h2>
-            <p class="result-message" id="resultMessage">You've mastered this clinical protocol!</p>
+            <h2 class="result-title" id="resultTitle">Perfect! 🎉</h2>
+            <p class="result-message" id="resultMessage">Amazing work!</p>
 
             <!-- Stats -->
             <div class="stats-grid">
@@ -281,7 +290,7 @@
                     <div class="stat-value" id="accuracyValue">100%</div>
                 </div>
                 <div class="stat-card glass-card">
-                    <div class="stat-label">Time Taken</div>
+                    <div class="stat-label">Time</div>
                     <div class="stat-value" id="timeValue">45s</div>
                 </div>
                 <div class="stat-card glass-card">
@@ -313,7 +322,7 @@
             <!-- Actions -->
             <div class="button-group">
                 <button class="btn-primary" id="tryAnotherBtn">
-                    Try Another Procedure 🎯
+                    Try Another 🎯
                 </button>
                 <button class="btn-secondary" id="shopNowBtn">
                     Shop Now 🛒
