@@ -4,8 +4,8 @@
 
 window.CONFIG = {
     supabase: {
-        url: 'YOUR_SUPABASE_URL', // Replace with your Supabase URL
-        key: 'YOUR_SUPABASE_ANON_KEY' // Replace with your Supabase anon key
+        url: 'https://bwuercsdytqsvjgpntjn.supabase.co', // Replace with your Supabase URL
+        key: 'sb_publishable_7FZH_o5bA3_QJ-iveY_kFA_K7xeJd9E' // Replace with your Supabase anon key
     },
 
     urls: {
