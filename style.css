@@ -1638,3 +1638,23 @@ body {
         font-size: 20px;
     }
 }
+/* ===================================
+   MOBILE SCROLL FIX
+=================================== */
+@media (max-width: 768px) {
+    .main-container {
+        padding-bottom: 180px !important;
+    }
+    
+    .steps-pool-card {
+        margin-bottom: 40px !important;
+    }
+    
+    .submit-wrapper {
+        margin-bottom: 80px !important;
+    }
+    
+    .floating-home-btn {
+        bottom: 100px !important;
+    }
+}
