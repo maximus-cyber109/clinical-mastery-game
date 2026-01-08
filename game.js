@@ -25,6 +25,7 @@ class ClinicalGame {
         this.procedureModal = document.getElementById('procedureModal');
         this.attemptsModal = document.getElementById('attemptsModal');
         this.resultModal = document.getElementById('resultModal');
+        this.leaderboardModal = document.getElementById('leaderboardModal');
         this.loadingScreen = document.getElementById('loadingScreen');
 
         // Main container
@@ -76,23 +77,37 @@ class ClinicalGame {
         document.getElementById('tryAnotherBtn')?.addEventListener('click', () => this.tryAnother());
         document.getElementById('shopNowBtn')?.addEventListener('click', () => this.shopNow());
         document.getElementById('copyBtn')?.addEventListener('click', () => this.copyCoupon());
+
+        // Leaderboard
+        document.getElementById('viewLeaderboardBtn')?.addEventListener('click', () => this.showFullLeaderboard());
+        document.getElementById('closeLeaderboardBtn')?.addEventListener('click', () => this.closeLeaderboard());
     }
 
     async checkEmailAndStart() {
+        // Show random loading message
+        const loadingSubtitle = document.querySelector('.loading-subtitle');
+        if (loadingSubtitle && window.supabaseHandler) {
+            loadingSubtitle.textContent = window.supabaseHandler.getRandomMessage('loading');
+        }
+
         setTimeout(async () => {
             if (window.supabaseHandler?.userEmail) {
-                // Email from URL - validate and start
                 await this.startGame();
             } else {
-                // Show email modal
                 this.hideLoading();
-                this.showEmailModal();
+                setTimeout(() => this.showEmailModal(), 300);
             }
         }, 1500);
     }
 
     hideLoading() {
-        this.loadingScreen?.classList.add('hidden');
+        if (this.loadingScreen) {
+            this.loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                this.loadingScreen.classList.add('hidden');
+                this.loadingScreen.style.display = 'none';
+            }, 400);
+        }
     }
 
     showEmailModal() {
@@ -115,6 +130,8 @@ class ClinicalGame {
         
         this.emailModal?.classList.remove('active');
         this.loadingScreen?.classList.remove('hidden');
+        this.loadingScreen.style.display = 'flex';
+        this.loadingScreen.style.opacity = '1';
 
         await window.supabaseHandler.validateUser();
         await this.startGame();
@@ -123,7 +140,12 @@ class ClinicalGame {
     async startGame() {
         this.hideLoading();
         
-        // Check attempts
+        // Show personalized welcome
+        this.updateWelcomeMessage();
+        
+        // Render leaderboard on main screen
+        this.renderTopLeaderboard();
+        
         if (window.supabaseHandler?.hasRewardAttemptsLeft()) {
             this.showRulesModal();
         } else {
@@ -131,14 +153,84 @@ class ClinicalGame {
         }
     }
 
+    updateWelcomeMessage() {
+        const welcomeText = document.getElementById('welcomeText');
+        if (welcomeText && window.supabaseHandler) {
+            const name = window.supabaseHandler.userDisplayName || 'Doctor';
+            const message = window.supabaseHandler.getRandomMessage('welcome');
+            welcomeText.innerHTML = `<strong>${name}</strong>, ${message}`;
+        }
+    }
+
+    renderTopLeaderboard() {
+        const container = document.getElementById('topLeaderboard');
+        if (!container || !window.supabaseHandler) return;
+
+        const topPlayers = window.supabaseHandler.getTopPlayers(3);
+
+        if (topPlayers.length === 0) {
+            container.innerHTML = '<p class="no-leaders">🏆 Be the first legend!</p>';
+            return;
+        }
+
+        container.innerHTML = topPlayers.map((player, index) => {
+            const medals = ['🥇', '🥈', '🥉'];
+            return `
+                <div class="leader-card ${index === 0 ? 'top-leader' : ''}">
+                    <div class="leader-rank">${medals[index]}</div>
+                    <div class="leader-info">
+                        <div class="leader-name">${player.name}</div>
+                        <div class="leader-stats">${player.accuracy}% accuracy</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    showFullLeaderboard() {
+        const modal = this.leaderboardModal;
+        if (!modal || !window.supabaseHandler) return;
+
+        const container = document.getElementById('leaderboardList');
+        const allPlayers = window.supabaseHandler.leaderboard;
+
+        if (allPlayers.length === 0) {
+            container.innerHTML = '<p class="no-data">No players yet. Be the first! 🚀</p>';
+        } else {
+            container.innerHTML = allPlayers.map(player => `
+                <div class="leaderboard-row">
+                    <div class="lb-rank">#${player.rank}</div>
+                    <div class="lb-name">${player.name}</div>
+                    <div class="lb-stats">
+                        <span class="lb-accuracy">${player.accuracy}%</span>
+                        <span class="lb-games">${player.games} games</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        modal.classList.add('active');
+    }
+
+    closeLeaderboard() {
+        this.leaderboardModal?.classList.remove('active');
+    }
+
     showRulesModal() {
         const attemptsLeft = CONFIG.game.maxRewardAttempts - (window.supabaseHandler?.attemptsUsed || 0);
         document.getElementById('attemptsRemaining').textContent = attemptsLeft;
         this.rulesModal?.classList.add('active');
+
+        // Scroll modal to top
+        setTimeout(() => {
+            const modalContainer = this.rulesModal?.querySelector('.modal-container');
+            if (modalContainer) {
+                modalContainer.scrollTop = 0;
+            }
+        }, 100);
     }
 
     showAttemptsExhausted() {
-        // Show previous rewards
         const prevRewards = window.supabaseHandler?.getPreviousRewards() || [];
         const display = document.getElementById('previousRewardsDisplay');
         
@@ -152,8 +244,14 @@ class ClinicalGame {
                     </div>
                 `).join('');
             } else {
-                display.innerHTML = '<p>No rewards earned yet. Keep practicing!</p>';
+                display.innerHTML = '<p>No rewards earned yet. Time to practice! 💪</p>';
             }
+        }
+
+        // Add quirky practice message
+        const practiceMsg = document.getElementById('practiceModeMessage');
+        if (practiceMsg && window.supabaseHandler) {
+            practiceMsg.textContent = window.supabaseHandler.getRandomMessage('practiceMode');
         }
 
         this.attemptsModal?.classList.add('active');
@@ -163,7 +261,6 @@ class ClinicalGame {
         this.rulesModal?.classList.remove('active');
         this.attemptsModal?.classList.remove('active');
         
-        // Load procedures
         const grid = document.getElementById('procedureGrid');
         if (!grid) return;
 
@@ -198,10 +295,7 @@ class ClinicalGame {
             return;
         }
 
-        // Close modal
         this.procedureModal?.classList.remove('active');
-
-        // Show countdown
         this.showCountdown();
     }
 
@@ -252,22 +346,18 @@ class ClinicalGame {
     }
 
     startProcedure() {
-        // Setup UI
         this.mainContainer?.classList.remove('hidden');
-        this.procedureBadge.textContent = this.currentProcedure.icon + ' ' + this.currentProcedure.title.split(' ').slice(0, 2).join(' ');
+        this.procedureBadge.textContent = this.currentProcedure.icon + ' ' + this.currentProcedure.title;
         this.procedureTitle.textContent = this.currentProcedure.title;
         this.procedureDescription.textContent = this.currentProcedure.description;
 
-        // Shuffle and display steps
         this.steps = this.shuffleArray([...this.currentProcedure.steps]);
         this.selectedSteps = [];
         this.renderSteps();
 
-        // Start timer
         this.startTime = Date.now();
         this.startTimer();
 
-        // Reset submit button
         this.submitBtn.disabled = true;
         this.updateCounter();
     }
@@ -307,7 +397,6 @@ class ClinicalGame {
         const isSelected = element.classList.contains('selected');
 
         if (isSelected) {
-            // Deselect
             const index = this.selectedSteps.findIndex(s => s.id === step.id);
             if (index > -1) {
                 this.selectedSteps.splice(index, 1);
@@ -315,13 +404,11 @@ class ClinicalGame {
             element.classList.remove('selected');
             this.reindexSteps();
         } else {
-            // Select
             this.selectedSteps.push(step);
             element.classList.add('selected');
             const numberEl = element.querySelector('.step-selection-number');
             numberEl.textContent = this.selectedSteps.length;
 
-            // Animation
             if (window.gsap) {
                 gsap.fromTo(element,
                     { scale: 0.95 },
@@ -335,7 +422,6 @@ class ClinicalGame {
     }
 
     reindexSteps() {
-        // Update numbers after deselection
         const allSteps = Array.from(document.querySelectorAll('.step-item-click'));
         allSteps.forEach(el => {
             const stepId = parseInt(el.dataset.stepId);
@@ -377,7 +463,6 @@ class ClinicalGame {
     checkSequence() {
         this.stopTimer();
         
-        // Calculate accuracy
         let correctCount = 0;
         this.selectedSteps.forEach((step, index) => {
             if (step.order === index + 1) {
@@ -389,10 +474,8 @@ class ClinicalGame {
         const timeTaken = Math.floor((Date.now() - this.startTime) / 1000);
         const isPerfect = accuracy === 100;
 
-        // Get reward
         const reward = window.supabaseHandler?.getRewardForAccuracy(accuracy) || CONFIG.rewardTiers[CONFIG.rewardTiers.length - 1];
 
-        // Submit to Supabase
         const attemptData = {
             procedureId: this.currentProcedure.id,
             procedureName: this.currentProcedure.title,
@@ -404,16 +487,24 @@ class ClinicalGame {
         };
 
         window.supabaseHandler?.submitAttempt(attemptData);
-
-        // Show result
         this.showResult(accuracy, timeTaken, reward, isPerfect);
     }
 
     showResult(accuracy, timeTaken, reward, isPerfect) {
+        // Get quirky message
+        let messageType = 'needsPractice';
+        if (isPerfect) {
+            messageType = 'perfect';
+        } else if (accuracy >= 70) {
+            messageType = 'good';
+        }
+
+        const quirkMessage = window.supabaseHandler?.getRandomMessage(messageType) || '';
+
         // Update result UI
         if (isPerfect) {
             this.resultTitle.textContent = '🎉 Perfect Sequence!';
-            this.resultMessage.textContent = 'You\'ve mastered this clinical protocol!';
+            this.resultMessage.textContent = quirkMessage;
             this.resultIcon.innerHTML = `
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -421,22 +512,22 @@ class ClinicalGame {
             `;
         } else if (accuracy >= 80) {
             this.resultTitle.textContent = '⭐ Excellent Work!';
-            this.resultMessage.textContent = 'Great job! Small room for improvement.';
+            this.resultMessage.textContent = quirkMessage;
         } else if (accuracy >= 60) {
             this.resultTitle.textContent = '👍 Good Effort!';
-            this.resultMessage.textContent = 'Not bad! Keep practicing.';
+            this.resultMessage.textContent = quirkMessage;
         } else {
             this.resultTitle.textContent = '📚 Keep Learning!';
-            this.resultMessage.textContent = 'Review the procedure and try again.';
+            this.resultMessage.textContent = quirkMessage;
         }
 
-        // Stats
         this.accuracyValue.textContent = `${accuracy}%`;
         this.timeValue.textContent = this.formatTime(timeTaken);
         this.attemptsValue.textContent = `${window.supabaseHandler?.attemptsUsed || 0}/${CONFIG.game.maxRewardAttempts}`;
 
-        // Reward card (only if not practice mode and has actual reward)
-        if (reward.priority > 0 && window.supabaseHandler?.hasRewardAttemptsLeft()) {
+        // Reward card
+        const isPracticeMode = !window.supabaseHandler?.hasRewardAttemptsLeft();
+        if (reward.priority > 0 && !isPracticeMode) {
             this.rewardCard.style.display = 'block';
             document.getElementById('rewardTitle').textContent = reward.title;
             document.getElementById('rewardDescription').textContent = reward.description;
@@ -453,10 +544,8 @@ class ClinicalGame {
             this.rewardCard.style.display = 'none';
         }
 
-        // Show modal
         this.resultModal?.classList.add('active');
 
-        // Confetti for perfect score
         if (isPerfect && window.gsap) {
             this.showConfetti();
         }
@@ -472,7 +561,6 @@ class ClinicalGame {
     }
 
     showConfetti() {
-        // Simple confetti effect
         const colors = ['#00A8E8', '#2EC4B6', '#06D6A0', '#FFB627'];
         for (let i = 0; i < 50; i++) {
             const confetti = document.createElement('div');
@@ -502,6 +590,12 @@ class ClinicalGame {
     tryAnother() {
         this.resultModal?.classList.remove('active');
         this.mainContainer?.classList.add('hidden');
+        
+        // Reload leaderboard
+        window.supabaseHandler?.loadLeaderboard().then(() => {
+            this.renderTopLeaderboard();
+        });
+        
         this.showProcedureSelection();
     }
 
@@ -530,7 +624,6 @@ class ClinicalGame {
     }
 }
 
-// Initialize game when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     window.clinicalGame = new ClinicalGame();
 });
