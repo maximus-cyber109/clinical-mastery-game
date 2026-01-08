@@ -1,5 +1,5 @@
 // ===========================================
-// SUPABASE HANDLER - Database Operations
+// SUPABASE HANDLER - Database + Leaderboard
 // ===========================================
 
 class SupabaseHandler {
@@ -7,11 +7,13 @@ class SupabaseHandler {
         this.client = null;
         this.userEmail = null;
         this.userName = null;
+        this.userDisplayName = null; // With Dr. prefix
         this.userId = null;
         this.attemptsUsed = 0;
         this.isValidated = false;
         this.rewards = [];
         this.previousAttempts = [];
+        this.leaderboard = [];
         this.init();
     }
 
@@ -29,7 +31,6 @@ class SupabaseHandler {
 
             console.log('✅ Supabase client initialized');
 
-            // Check for email in URL
             const urlParams = new URLSearchParams(window.location.search);
             const emailParam = urlParams.get('email');
 
@@ -39,6 +40,7 @@ class SupabaseHandler {
             }
 
             await this.loadRewards();
+            await this.loadLeaderboard();
         } catch (err) {
             console.error('Supabase init error:', err);
         }
@@ -52,7 +54,6 @@ class SupabaseHandler {
         if (!this.client || !this.userEmail) return false;
 
         try {
-            // Check if user exists
             const { data: userData, error: userError } = await this.client
                 .from('clinical_users')
                 .select('*')
@@ -66,15 +67,11 @@ class SupabaseHandler {
             if (userData) {
                 this.userId = userData.id;
                 this.userName = userData.name;
+                this.userDisplayName = this.formatDoctorName(userData.name);
                 this.attemptsUsed = userData.attempts_used || 0;
-                
-                // Load previous attempts
                 await this.loadUserAttempts();
             } else {
-                // Validate with Magento first
                 await this.validateWithMagento();
-                
-                // Create new user
                 await this.createUser();
             }
 
@@ -83,6 +80,21 @@ class SupabaseHandler {
         } catch (err) {
             console.error('User validation error:', err);
             return false;
+        }
+    }
+
+    formatDoctorName(name) {
+        if (!name) return 'Dr. Champion';
+        
+        // Check if name already starts with Dr., Dr, DR, or similar
+        const hasPrefix = /^(dr\.?|doctor)\s+/i.test(name.trim());
+        
+        if (hasPrefix) {
+            // Clean up the existing prefix
+            return name.trim().replace(/^(dr\.?|doctor)\s+/i, 'Dr. ');
+        } else {
+            // Add Dr. prefix
+            return `Dr. ${name.trim()}`;
         }
     }
 
@@ -101,12 +113,15 @@ class SupabaseHandler {
 
             if (result.success && result.customer) {
                 this.userName = `${result.customer.firstname} ${result.customer.lastname}`;
+                this.userDisplayName = this.formatDoctorName(this.userName);
             } else {
                 this.userName = this.userEmail.split('@')[0];
+                this.userDisplayName = this.formatDoctorName(this.userName);
             }
         } catch (err) {
             console.warn('Magento validation failed:', err);
             this.userName = this.userEmail.split('@')[0];
+            this.userDisplayName = this.formatDoctorName(this.userName);
         }
     }
 
@@ -119,7 +134,9 @@ class SupabaseHandler {
                 .insert([{
                     email: this.userEmail,
                     name: this.userName,
+                    display_name: this.userDisplayName,
                     attempts_used: 0,
+                    best_score: 0,
                     created_at: new Date().toISOString()
                 }])
                 .select()
@@ -176,13 +193,46 @@ class SupabaseHandler {
         }
     }
 
+    async loadLeaderboard() {
+        if (!this.client) return;
+
+        try {
+            const { data, error } = await this.client
+                .from('clinical_users')
+                .select('display_name, best_score, best_accuracy, total_games')
+                .gt('best_score', 0)
+                .order('best_score', { ascending: false })
+                .order('best_accuracy', { ascending: false })
+                .limit(50);
+
+            if (error) throw error;
+
+            this.leaderboard = (data || []).map((user, index) => ({
+                rank: index + 1,
+                name: user.display_name || 'Dr. Anonymous',
+                score: user.best_score || 0,
+                accuracy: user.best_accuracy || 0,
+                games: user.total_games || 0
+            }));
+
+            console.log('📊 Leaderboard loaded:', this.leaderboard.length, 'players');
+        } catch (err) {
+            console.error('Load leaderboard error:', err);
+            this.leaderboard = [];
+        }
+    }
+
+    getTopPlayers(count = 3) {
+        return this.leaderboard.slice(0, count);
+    }
+
     getRewardForAccuracy(accuracy) {
         for (const reward of this.rewards) {
             if (accuracy >= reward.min_accuracy && accuracy <= reward.max_accuracy) {
                 return reward;
             }
         }
-        return this.rewards[this.rewards.length - 1]; // Fallback to last reward
+        return this.rewards[this.rewards.length - 1];
     }
 
     hasRewardAttemptsLeft() {
@@ -218,14 +268,24 @@ class SupabaseHandler {
 
             if (error) throw error;
 
-            // Update user attempts count if not practice
+            // Update user stats
             if (!isPractice) {
+                const updateData = { 
+                    attempts_used: this.attemptsUsed + 1,
+                    last_attempt_at: new Date().toISOString(),
+                    total_games: (await this.getTotalGames()) + 1
+                };
+
+                // Update best score if this is better
+                const currentBest = await this.getBestScore();
+                if (attemptData.accuracy > currentBest.accuracy) {
+                    updateData.best_score = attemptData.accuracy;
+                    updateData.best_accuracy = attemptData.accuracy;
+                }
+
                 const { error: updateError } = await this.client
                     .from('clinical_users')
-                    .update({ 
-                        attempts_used: this.attemptsUsed + 1,
-                        last_attempt_at: new Date().toISOString()
-                    })
+                    .update(updateData)
                     .eq('id', this.userId);
 
                 if (updateError) throw updateError;
@@ -233,13 +293,51 @@ class SupabaseHandler {
                 this.attemptsUsed++;
             }
 
-            // Submit to backend API (Google Sheets, WebEngage, etc.)
+            // Reload leaderboard
+            await this.loadLeaderboard();
+
+            // Submit to backend
             await this.submitToBackend(attemptData);
 
             return { success: true, data };
         } catch (err) {
             console.error('Submit attempt error:', err);
             return { success: false, error: err.message };
+        }
+    }
+
+    async getBestScore() {
+        if (!this.client || !this.userId) return { accuracy: 0 };
+
+        try {
+            const { data } = await this.client
+                .from('clinical_users')
+                .select('best_score, best_accuracy')
+                .eq('id', this.userId)
+                .single();
+
+            return {
+                accuracy: data?.best_accuracy || 0,
+                score: data?.best_score || 0
+            };
+        } catch (err) {
+            return { accuracy: 0 };
+        }
+    }
+
+    async getTotalGames() {
+        if (!this.client || !this.userId) return 0;
+
+        try {
+            const { data } = await this.client
+                .from('clinical_users')
+                .select('total_games')
+                .eq('id', this.userId)
+                .single();
+
+            return data?.total_games || 0;
+        } catch (err) {
+            return 0;
         }
     }
 
@@ -251,6 +349,7 @@ class SupabaseHandler {
                 body: JSON.stringify({
                     email: this.userEmail,
                     name: this.userName,
+                    display_name: this.userDisplayName,
                     procedure: attemptData.procedureName,
                     accuracy: attemptData.accuracy,
                     time_taken: attemptData.timeTaken,
@@ -278,7 +377,11 @@ class SupabaseHandler {
                 accuracy: a.accuracy
             }));
     }
+
+    getRandomMessage(type) {
+        const messages = CONFIG.funMessages[type] || CONFIG.funMessages.welcome;
+        return messages[Math.floor(Math.random() * messages.length)];
+    }
 }
 
-// Initialize global handler
 window.supabaseHandler = new SupabaseHandler();
