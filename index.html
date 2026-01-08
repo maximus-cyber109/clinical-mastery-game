@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PinkBlue Clinical Mastery Challenge 🦷</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+        <div class="grid-pattern"></div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="pulse-loader">
+                <div class="pulse-ring"></div>
+                <div class="pulse-ring"></div>
+                <div class="pulse-ring"></div>
+            </div>
+            <h2 class="loading-title">Loading Your Challenge...</h2>
+            <p class="loading-subtitle">Preparing clinical scenarios</p>
+        </div>
+    </div>
+
+    <!-- Email Modal -->
+    <div class="modal-overlay" id="emailModal">
+        <div class="modal-container email-modal glass-card">
+            <div class="modal-header">
+                <div class="header-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h2 class="modal-title">🦷 Welcome, Dental Pro!</h2>
+                <p class="modal-subtitle">Enter your PinkBlue email to start the challenge</p>
+            </div>
+            
+            <div class="email-form">
+                <div class="input-group">
+                    <input 
+                        type="email" 
+                        id="emailInput" 
+                        class="email-input" 
+                        placeholder="your@email.com"
+                        autocomplete="email"
+                    >
+                    <div class="input-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="error-message" id="emailError"></div>
+                <button class="verify-btn" id="verifyEmailBtn">
+                    <div class="btn-bg"></div>
+                    <div class="btn-content">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        <span>Let's Go!</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attempts Exhausted Modal -->
+    <div class="modal-overlay" id="attemptsModal">
+        <div class="modal-container already-played-modal glass-card">
+            <div class="info-icon-large">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <h2 class="modal-title">Practice Mode Activated! 🎯</h2>
+            <p class="modal-subtitle">You've used your 2 reward attempts. Keep practicing to sharpen your skills!</p>
+            
+            <div class="reward-reminder">
+                <h3>🏆 Your Best Rewards:</h3>
+                <div id="previousRewardsDisplay"></div>
+            </div>
+            
+            <button class="btn-primary full-width" id="continueToGame">
+                Continue to Practice Mode
+            </button>
+        </div>
+    </div>
+
+    <!-- Rules Modal -->
+    <div class="modal-overlay" id="rulesModal">
+        <div class="modal-container specialty-modal glass-card">
+            <div class="modal-glow"></div>
+            
+            <div class="modal-header">
+                <div class="header-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h2 class="modal-title">🎮 How to Play</h2>
+                <p class="modal-subtitle">Master clinical procedures, win awesome rewards!</p>
+            </div>
+
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="rule-number">1</div>
+                    <h4>Choose Your Specialty</h4>
+                    <p>Pick from 5 different clinical procedures</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">2</div>
+                    <h4>Arrange Steps Correctly</h4>
+                    <p>Click steps in the correct clinical sequence</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">3</div>
+                    <h4>Win Rewards</h4>
+                    <p>Perfect sequence = Premium rewards! 🎁</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-number">4</div>
+                    <h4>2 Reward Attempts</h4>
+                    <p>After 2 tries, enter practice mode</p>
+                </div>
+            </div>
+
+            <div class="attempts-badge">
+                <span id="attemptsRemaining">2</span> reward attempts left
+            </div>
+
+            <button class="btn-primary full-width" id="rulesOkayBtn">
+                I'm Ready! Let's Play 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- Procedure Selection Modal -->
+    <div class="modal-overlay" id="procedureModal">
+        <div class="modal-container specialty-modal glass-card">
+            <div class="modal-glow"></div>
+            
+            <div class="modal-header">
+                <div class="header-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                </div>
+                <h2 class="modal-title">Choose Your Clinical Challenge</h2>
+                <p class="modal-subtitle">Select a procedure to master</p>
+            </div>
+
+            <div class="specialty-grid" id="procedureGrid">
+                <!-- Procedures will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Countdown Overlay -->
+    <div class="countdown-overlay" id="countdownOverlay">
+        <div class="countdown-number" id="countdownNumber">3</div>
+    </div>
+
+    <!-- Main Game Container -->
+    <div class="main-container hidden" id="mainContainer">
+        <!-- Header -->
+        <header class="glass-header">
+            <div class="header-content">
+                <div class="brand-section">
+                    <div class="brand-icon">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="brand-title">Clinical Mastery</div>
+                        <div class="specialty-badge" id="procedureBadge">Loading...</div>
+                    </div>
+                </div>
+                <div class="timer-badge">
+                    <svg class="timer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span id="timer">00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Game Info -->
+        <div class="game-info-card glass-card">
+            <div class="info-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <div class="info-content">
+                <h2 id="procedureTitle">Loading Procedure...</h2>
+                <p id="procedureDescription">Click steps in the correct clinical sequence</p>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions-card glass-card">
+            <div class="instruction-item">
+                <div class="instruction-number">1</div>
+                <p>Click each step in order</p>
+            </div>
+            <div class="instruction-item">
+                <div class="instruction-number">2</div>
+                <p>Numbers appear as you select</p>
+            </div>
+            <div class="instruction-item">
+                <div class="instruction-number">3</div>
+                <p>Click again to deselect</p>
+            </div>
+        </div>
+
+        <!-- Steps Pool -->
+        <div class="steps-pool-card glass-card">
+            <div class="zone-header">
+                <div class="zone-indicator"></div>
+                <h3>Clinical Steps (Shuffled)</h3>
+                <div class="step-counter">
+                    <span id="selectedCount">0</span>/<span id="totalCount">0</span> selected
+                </div>
+            </div>
+            
+            <div class="steps-pool-click" id="stepsPool">
+                <!-- Steps loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="submit-wrapper">
+            <button class="submit-btn" id="submitBtn" disabled>
+                <div class="btn-bg"></div>
+                <div class="btn-content">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Check My Sequence</span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div class="modal-overlay" id="resultModal">
+        <div class="modal-container result-modal glass-card">
+            <div class="result-animation">
+                <div class="success-checkmark" id="resultIcon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <h2 class="result-title" id="resultTitle">Perfect Sequence! 🎉</h2>
+            <p class="result-message" id="resultMessage">You've mastered this clinical protocol!</p>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card glass-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracyValue">100%</div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-label">Time Taken</div>
+                    <div class="stat-value" id="timeValue">45s</div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-label">Attempts</div>
+                    <div class="stat-value" id="attemptsValue">1/2</div>
+                </div>
+            </div>
+
+            <!-- Reward Card -->
+            <div class="reward-card-3d glass-card" id="rewardCard" style="display: none;">
+                <h3>🏆 Your Reward</h3>
+                <div class="reward-content">
+                    <img id="rewardImage" class="reward-product-img" alt="Reward">
+                    <div class="reward-info">
+                        <h4 id="rewardTitle">Premium Product</h4>
+                        <p id="rewardDescription">Exclusive discount</p>
+                        <div class="coupon-code-box">
+                            <code id="couponCode">REWARD123</code>
+                            <button class="copy-btn" id="copyBtn">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="button-group">
+                <button class="btn-primary" id="tryAnotherBtn">
+                    Try Another Procedure 🎯
+                </button>
+                <button class="btn-secondary" id="shopNowBtn">
+                    Shop Now 🛒
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="supabase-handler.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
