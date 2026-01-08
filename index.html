@@ -81,100 +81,94 @@
         </div>
     </div>
 
-    <!-- Attempts Exhausted Modal -->
-    <div class="modal-overlay" id="attemptsModal">
-        <div class="modal-container already-played-modal glass-card">
-            <div class="info-icon-large">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
+    <!-- HOME DASHBOARD SCREEN -->
+    <div class="dashboard-container hidden" id="dashboardContainer">
+        <!-- Header -->
+        <header class="glass-header">
+            <div class="header-content">
+                <div class="brand-section">
+                    <div class="brand-icon">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="brand-title">Clinical Mastery</div>
+                        <div class="user-email-badge" id="userEmailBadge">Loading...</div>
+                    </div>
+                </div>
             </div>
-            <h2 class="modal-title">Practice Mode Activated! 🎯</h2>
-            <p class="modal-subtitle" id="practiceModeMessage">You've used your 2 reward attempts. Keep practicing!</p>
-            
-            <div class="reward-reminder">
-                <h3>🏆 Your Previous Rewards:</h3>
-                <div id="previousRewardsDisplay"></div>
+        </header>
+
+        <!-- Welcome Banner -->
+        <div class="welcome-card glass-card">
+            <div class="welcome-content">
+                <h1 id="dashboardWelcome">Welcome back, Doctor! 👋</h1>
+                <p id="dashboardSubtitle">Ready to master another procedure?</p>
             </div>
-            
-            <button class="btn-primary full-width" id="continueToGame">
-                Continue to Practice Mode
+            <div class="attempts-info">
+                <div class="attempts-circle">
+                    <span id="attemptsLeftCircle">2</span>
+                </div>
+                <div class="attempts-label">
+                    <strong>Reward Attempts</strong>
+                    <span id="attemptsStatus">Available</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-btn primary-action" id="startGameBtn">
+                <div class="action-icon">🎮</div>
+                <div class="action-text">
+                    <strong>Start New Game</strong>
+                    <span>Choose a procedure</span>
+                </div>
+            </button>
+            <button class="action-btn secondary-action" id="shopNowDashBtn">
+                <div class="action-icon">🛒</div>
+                <div class="action-text">
+                    <strong>Shop PinkBlue</strong>
+                    <span>Redeem your rewards</span>
+                </div>
             </button>
         </div>
-    </div>
 
-    <!-- Rules Modal -->
-    <div class="modal-overlay" id="rulesModal">
-        <div class="modal-container rules-modal glass-card">
-            <div class="modal-glow"></div>
-            
-            <div class="modal-header">
-                <div class="header-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <h2 class="modal-title">🎮 How to Play</h2>
-                <p class="modal-subtitle">Master clinical procedures, win rewards!</p>
+        <!-- My Rewards Section -->
+        <div class="rewards-section glass-card">
+            <div class="section-header">
+                <h3>🏆 My Rewards & Coupons</h3>
+                <span class="reward-count" id="rewardCount">0 rewards</span>
             </div>
-
-            <!-- Compact Welcome Message -->
-            <div class="welcome-banner">
-                <p id="welcomeText">Welcome, Doctor! 🎯</p>
-            </div>
-
-            <!-- Compact Top Leaderboard -->
-            <div class="mini-leaderboard">
-                <div class="mini-leader-header">
-                    <h4>🏆 Top Performers</h4>
-                    <button class="view-all-btn" id="viewLeaderboardBtn">View All</button>
-                </div>
-                <div id="topLeaderboard"></div>
-            </div>
-
-            <!-- Compact Rules -->
-            <div class="rules-compact">
-                <div class="rule-item">
-                    <span class="rule-icon">1️⃣</span>
-                    <span>Choose procedure</span>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-icon">2️⃣</span>
-                    <span>Click steps in order</span>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-icon">3️⃣</span>
-                    <span>Win rewards!</span>
+            <div id="myRewardsList" class="rewards-list">
+                <div class="empty-state">
+                    <p>🎯 Play games to earn exclusive rewards!</p>
                 </div>
             </div>
-
-            <div class="attempts-badge">
-                <span id="attemptsRemaining">2</span> reward attempts left
-            </div>
-
-            <button class="btn-primary full-width" id="rulesOkayBtn">
-                I'm Ready! Let's Play 🚀
-            </button>
         </div>
-    </div>
 
-    <!-- Procedure Selection Modal -->
-    <div class="modal-overlay" id="procedureModal">
-        <div class="modal-container specialty-modal glass-card">
-            <div class="modal-glow"></div>
-            
-            <div class="modal-header">
-                <div class="header-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                    </svg>
-                </div>
-                <h2 class="modal-title">Choose Your Challenge</h2>
-                <p class="modal-subtitle">Select a procedure to master</p>
+        <!-- Leaderboard Section -->
+        <div class="leaderboard-section glass-card">
+            <div class="section-header">
+                <h3>🏅 Top Performers</h3>
+                <button class="view-all-btn" id="viewFullLeaderboardBtn">View All</button>
             </div>
+            <div id="dashboardLeaderboard" class="dashboard-leaderboard">
+                <!-- Leaderboard will be loaded here -->
+            </div>
+        </div>
 
-            <div class="specialty-grid" id="procedureGrid">
-                <!-- Procedures loaded dynamically -->
+        <!-- My Games History -->
+        <div class="history-section glass-card">
+            <div class="section-header">
+                <h3>📊 My Game History</h3>
+                <span class="history-count" id="historyCount">0 games</span>
+            </div>
+            <div id="myHistoryList" class="history-list">
+                <div class="empty-state">
+                    <p>No games played yet. Start your first challenge! 🚀</p>
+                </div>
             </div>
         </div>
     </div>
@@ -198,6 +192,31 @@
 
             <button class="btn-primary full-width" id="closeLeaderboardBtn">
                 Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Procedure Selection Modal -->
+    <div class="modal-overlay" id="procedureModal">
+        <div class="modal-container specialty-modal glass-card">
+            <div class="modal-glow"></div>
+            
+            <div class="modal-header">
+                <div class="header-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                </div>
+                <h2 class="modal-title">Choose Your Challenge</h2>
+                <p class="modal-subtitle">Select a procedure to master</p>
+            </div>
+
+            <div class="specialty-grid" id="procedureGrid">
+                <!-- Procedures loaded dynamically -->
+            </div>
+
+            <button class="btn-secondary full-width" id="backToDashboardBtn">
+                ← Back to Home
             </button>
         </div>
     </div>
@@ -267,6 +286,11 @@
                 </div>
             </button>
         </div>
+
+        <!-- Home Button -->
+        <button class="floating-home-btn" id="floatingHomeBtn" title="Back to Home">
+            🏠
+        </button>
     </div>
 
     <!-- Result Modal -->
@@ -324,8 +348,8 @@
                 <button class="btn-primary" id="tryAnotherBtn">
                     Try Another 🎯
                 </button>
-                <button class="btn-secondary" id="shopNowBtn">
-                    Shop Now 🛒
+                <button class="btn-secondary" id="backHomeBtn">
+                    Back to Home 🏠
                 </button>
             </div>
         </div>
