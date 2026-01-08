@@ -1412,3 +1412,74 @@ body {
         font-size: 14px;
     }
 }
+/* ===================================
+   MODAL SCROLLING FIX
+=================================== */
+.modal-container {
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.4s var(--transition);
+    /* IMPORTANT: Enable smooth scrolling */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* Make sure specialty modal is scrollable */
+.specialty-modal {
+    padding: 48px 32px;
+    position: relative;
+    overflow: visible; /* Changed from hidden */
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+/* Fix for mobile - ensure modal is not blocked */
+@media (max-width: 768px) {
+    .modal-container {
+        max-height: 95vh;
+        padding-bottom: 20px;
+    }
+    
+    .specialty-modal {
+        padding: 32px 20px;
+        max-height: none; /* Allow full height on mobile */
+    }
+    
+    .modal-overlay {
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+}
+
+/* Ensure button is visible */
+.btn-primary.full-width {
+    margin-top: 16px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Fix glow overlay blocking content */
+.modal-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 168, 232, 0.1) 0%, transparent 70%);
+    pointer-events: none; /* CRITICAL: Don't block clicks */
+    z-index: 0;
+    animation: glowRotate 20s linear infinite;
+}
+
+/* Ensure all content is above glow */
+.modal-header,
+.rules-grid,
+.attempts-badge,
+.btn-primary {
+    position: relative;
+    z-index: 1;
+}
