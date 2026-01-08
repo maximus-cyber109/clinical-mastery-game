@@ -1,7 +1,3 @@
-// ===========================================
-// PINKBLUE CLINICAL MASTERY - CONFIGURATION
-// ===========================================
-
 window.CONFIG = {
     supabase: {
         url: 'https://bwuercsdytqsvjgpntjn.supabase.co', // Replace with your Supabase URL
@@ -16,121 +12,116 @@ window.CONFIG = {
     },
 
     game: {
-        maxRewardAttempts: 2, // Maximum attempts for rewards
-        timeLimit: 300, // 5 minutes in seconds
-        perfectScoreBonus: 10 // Bonus points for perfect sequence
+        maxRewardAttempts: 2,
+        timeLimit: 300, // 5 minutes
+        perfectScoreBonus: 10
     },
 
-    // 🎯 CLINICAL PROCEDURES
+    // 🎯 CLINICAL PROCEDURES (More compact for mobile)
     procedures: {
         crown: {
             id: 'crown',
-            title: 'Perfect Crown Prep Protocol',
-            description: 'Master the art of crown preparation and impression',
+            title: 'Crown Prep Mastery',
+            description: 'Perfect crown preparation workflow',
             icon: '👑',
             difficulty: 'intermediate',
             steps: [
-                { id: 1, text: 'Administer local anesthesia and achieve hemostasis', order: 1 },
-                { id: 2, text: 'Tooth preparation with proper margin design', order: 2 },
-                { id: 3, text: 'Place retraction cord in gingival sulcus', order: 3 },
-                { id: 4, text: 'Wait 7-10 minutes for tissue retraction', order: 4 },
-                { id: 5, text: 'Remove cord and verify margin visibility', order: 5 },
-                { id: 6, text: 'Clean and dry the prepared area', order: 6 },
-                { id: 7, text: 'Perform shade selection in optimal lighting', order: 7 },
-                { id: 8, text: 'Take final impression with preferred material', order: 8 },
-                { id: 9, text: 'Fabricate and cement temporary crown', order: 9 }
+                { id: 1, text: 'Anesthesia and hemostasis control', order: 1 },
+                { id: 2, text: 'Tooth preparation with margin design', order: 2 },
+                { id: 3, text: 'Place retraction cord in sulcus', order: 3 },
+                { id: 4, text: 'Wait 7-10 min for tissue retraction', order: 4 },
+                { id: 5, text: 'Remove cord, verify margin visibility', order: 5 },
+                { id: 6, text: 'Clean and dry prepared area', order: 6 },
+                { id: 7, text: 'Shade selection under natural light', order: 7 },
+                { id: 8, text: 'Take final impression', order: 8 }
             ]
         },
 
         whitening: {
             id: 'whitening',
-            title: 'Professional Whitening Workflow',
-            description: 'Execute perfect in-office teeth whitening procedure',
+            title: 'Whitening Protocol',
+            description: 'Professional teeth whitening sequence',
             icon: '✨',
             difficulty: 'beginner',
             steps: [
-                { id: 1, text: 'Patient consultation and pre-treatment shade assessment', order: 1 },
-                { id: 2, text: 'Prophylaxis - polish teeth to remove pellicle layer', order: 2 },
-                { id: 3, text: 'Isolate teeth and protect gingival tissues', order: 3 },
-                { id: 4, text: 'Apply gingival barrier (liquid dam)', order: 4 },
-                { id: 5, text: 'Light-cure the gingival barrier', order: 5 },
-                { id: 6, text: 'Apply whitening gel to tooth surfaces', order: 6 },
-                { id: 7, text: 'Activate with LED/laser light for 15 minutes', order: 7 },
-                { id: 8, text: 'Remove gel and assess shade improvement', order: 8 },
-                { id: 9, text: 'Repeat process 2-3 times if needed', order: 9 },
-                { id: 10, text: 'Apply desensitizing fluoride gel', order: 10 }
+                { id: 1, text: 'Pre-treatment shade assessment', order: 1 },
+                { id: 2, text: 'Prophylaxis to remove pellicle', order: 2 },
+                { id: 3, text: 'Isolate teeth, protect gingiva', order: 3 },
+                { id: 4, text: 'Apply gingival barrier', order: 4 },
+                { id: 5, text: 'Light-cure the barrier', order: 5 },
+                { id: 6, text: 'Apply whitening gel', order: 6 },
+                { id: 7, text: 'LED activation for 15 minutes', order: 7 },
+                { id: 8, text: 'Remove gel, assess shade', order: 8 },
+                { id: 9, text: 'Apply desensitizing fluoride', order: 9 }
             ]
         },
 
         rct: {
             id: 'rct',
-            title: 'Root Canal Treatment Protocol',
-            description: 'Complete endodontic treatment sequence',
+            title: 'RCT Excellence',
+            description: 'Root canal treatment protocol',
             icon: '🦷',
             difficulty: 'advanced',
             steps: [
-                { id: 1, text: 'Diagnosis with radiographs and vitality tests', order: 1 },
-                { id: 2, text: 'Local anesthesia and rubber dam isolation', order: 2 },
+                { id: 1, text: 'Diagnosis with radiographs', order: 1 },
+                { id: 2, text: 'Anesthesia and rubber dam isolation', order: 2 },
                 { id: 3, text: 'Access cavity preparation', order: 3 },
-                { id: 4, text: 'Locate and negotiate all canal orifices', order: 4 },
-                { id: 5, text: 'Determine working length (apex locator + radiograph)', order: 5 },
-                { id: 6, text: 'Biomechanical preparation with rotary files', order: 6 },
-                { id: 7, text: 'Irrigation with NaOCl and EDTA', order: 7 },
+                { id: 4, text: 'Locate all canal orifices', order: 4 },
+                { id: 5, text: 'Determine working length', order: 5 },
+                { id: 6, text: 'Biomechanical prep with files', order: 6 },
+                { id: 7, text: 'Irrigation (NaOCl + EDTA)', order: 7 },
                 { id: 8, text: 'Dry canals with paper points', order: 8 },
-                { id: 9, text: 'Obturation with gutta-percha and sealer', order: 9 },
-                { id: 10, text: 'Post-operative radiograph and temporization', order: 10 }
+                { id: 9, text: 'Obturation with gutta-percha', order: 9 }
             ]
         },
 
         extraction: {
             id: 'extraction',
-            title: 'Surgical Tooth Extraction',
-            description: 'Safe and effective tooth extraction protocol',
+            title: 'Surgical Extraction',
+            description: 'Safe tooth extraction sequence',
             icon: '🔧',
             difficulty: 'intermediate',
             steps: [
-                { id: 1, text: 'Pre-operative assessment and radiographic evaluation', order: 1 },
-                { id: 2, text: 'Obtain informed consent from patient', order: 2 },
-                { id: 3, text: 'Administer local anesthesia (infiltration/block)', order: 3 },
-                { id: 4, text: 'Verify adequate anesthesia before proceeding', order: 4 },
-                { id: 5, text: 'Elevate gingival tissues with periosteal elevator', order: 5 },
-                { id: 6, text: 'Loosen tooth with dental elevator', order: 6 },
-                { id: 7, text: 'Extract tooth with appropriate forceps', order: 7 },
-                { id: 8, text: 'Debride socket and inspect for fragments', order: 8 },
-                { id: 9, text: 'Achieve hemostasis with gauze pressure', order: 9 },
-                { id: 10, text: 'Provide post-operative instructions and medications', order: 10 }
+                { id: 1, text: 'Pre-op assessment + radiographs', order: 1 },
+                { id: 2, text: 'Obtain informed consent', order: 2 },
+                { id: 3, text: 'Administer local anesthesia', order: 3 },
+                { id: 4, text: 'Verify adequate anesthesia', order: 4 },
+                { id: 5, text: 'Elevate gingival tissues', order: 5 },
+                { id: 6, text: 'Loosen tooth with elevator', order: 6 },
+                { id: 7, text: 'Extract with forceps', order: 7 },
+                { id: 8, text: 'Debride socket, check fragments', order: 8 },
+                { id: 9, text: 'Achieve hemostasis', order: 9 }
             ]
         },
 
         restoration: {
             id: 'restoration',
-            title: 'Composite Restoration Protocol',
-            description: 'Perfect posterior composite filling procedure',
+            title: 'Composite Filling',
+            description: 'Perfect posterior restoration',
             icon: '💎',
             difficulty: 'intermediate',
             steps: [
-                { id: 1, text: 'Local anesthesia and rubber dam placement', order: 1 },
-                { id: 2, text: 'Remove carious dentin and prepare cavity', order: 2 },
-                { id: 3, text: 'Matrix band and wedge placement', order: 3 },
-                { id: 4, text: 'Apply etchant (37% phosphoric acid) for 15 seconds', order: 4 },
-                { id: 5, text: 'Rinse thoroughly and maintain moist dentin', order: 5 },
-                { id: 6, text: 'Apply bonding agent and light-cure', order: 6 },
-                { id: 7, text: 'Place composite in 2mm incremental layers', order: 7 },
-                { id: 8, text: 'Light-cure each layer for 20-40 seconds', order: 8 },
-                { id: 9, text: 'Remove matrix and check occlusion', order: 9 },
-                { id: 10, text: 'Finish and polish restoration', order: 10 }
+                { id: 1, text: 'Anesthesia + rubber dam', order: 1 },
+                { id: 2, text: 'Remove caries, prepare cavity', order: 2 },
+                { id: 3, text: 'Matrix band + wedge placement', order: 3 },
+                { id: 4, text: 'Apply etchant (15 seconds)', order: 4 },
+                { id: 5, text: 'Rinse, maintain moist dentin', order: 5 },
+                { id: 6, text: 'Apply bonding agent + cure', order: 6 },
+                { id: 7, text: 'Place composite incrementally', order: 7 },
+                { id: 8, text: 'Light-cure each layer', order: 8 },
+                { id: 9, text: 'Finish and polish restoration', order: 9 }
             ]
         }
     },
 
-    // 🎁 REWARD TIERS (stored in Supabase but fallback here)
+    // 🎁 REWARD TIERS
     rewardTiers: [
         {
             id: 'perfect',
             min_accuracy: 100,
             max_accuracy: 100,
             title: 'Elements Retract Complete Kit',
-            description: 'Premium hemostatic retraction kit - FREEBIE + 15% Off',
+            description: 'Premium hemostatic kit - FREEBIE + 15% Off',
             coupon_code: 'PERFECT15',
             coupon_discount: '15% + Free Product',
             image_url: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/elements%20retract.png',
@@ -141,7 +132,7 @@ window.CONFIG = {
             min_accuracy: 80,
             max_accuracy: 99,
             title: 'Elements Whitening System',
-            description: 'Professional in-office whitening kit - 10% Off',
+            description: 'Professional whitening kit - 10% Off',
             coupon_code: 'EXCEL10',
             coupon_discount: '10% Off',
             image_url: 'https://email-editor-resources.s3.amazonaws.com/images/82618240/elements%20bleaching%20kit.png',
@@ -151,8 +142,8 @@ window.CONFIG = {
             id: 'good',
             min_accuracy: 60,
             max_accuracy: 79,
-            title: 'PinkBlue Premium Burs Set',
-            description: 'Diamond bur collection - 5% Off',
+            title: 'PinkBlue Premium Burs',
+            description: 'Diamond burs - 5% Off',
             coupon_code: 'GOOD5',
             coupon_discount: '5% Off',
             image_url: 'https://pinkblue.in/media/catalog/product/placeholder/default/no-image.png',
@@ -162,12 +153,58 @@ window.CONFIG = {
             id: 'practice',
             min_accuracy: 0,
             max_accuracy: 59,
-            title: 'Keep Practicing!',
-            description: 'Try again to improve your score',
+            title: 'Keep Grinding!',
+            description: 'Even legends had bad days 😅',
             coupon_code: 'PRACTICE',
-            coupon_discount: 'No reward this time',
+            coupon_discount: 'Try again',
             image_url: null,
             priority: 0
         }
-    ]
+    ],
+
+    // 😄 QUIRKY DENTAL HUMOR
+    funMessages: {
+        welcome: [
+            "Welcome back, tooth wizard! 🪄",
+            "Ready to show off those skills? 🦷",
+            "Let's separate the pros from the denture wearers! 😄",
+            "Time to drill... I mean, thrill! 🎯",
+            "Another day, another perfect restoration! ✨"
+        ],
+        loading: [
+            "Sterilizing instruments...",
+            "Polishing our A-game...",
+            "Checking if you flossed today...",
+            "Preparing clinical scenarios...",
+            "Mixing the perfect shade..."
+        ],
+        perfect: [
+            "Holy molars! Perfect score! 🎉",
+            "You're sharper than a scaler! 🔪",
+            "Even the tooth fairy is jealous! 🧚",
+            "Flawless! Did you peek at the answer key? 😏",
+            "Crown-worthy performance! 👑"
+        ],
+        good: [
+            "Solid work, cavity crusher! 💪",
+            "Not bad for a Monday! 😊",
+            "You've got the touch! ✋",
+            "Smooth operator! Keep it up! 🎯",
+            "Your patients would approve! 👍"
+        ],
+        needsPractice: [
+            "Even Usain Bolt trips sometimes! 🏃",
+            "Rome wasn't built in a day... neither are skills! 🏛️",
+            "Hey, at least you didn't drop the handpiece! 😅",
+            "Practice makes permanent! Try again! 💪",
+            "Your first root canal was probably worse! 😉"
+        ],
+        practiceMode: [
+            "Practice mode: where legends are forged! 🔥",
+            "No pressure, just perfection! 😎",
+            "Sharpen those skills, doc! 🪛",
+            "Every master was once a disaster! 📚",
+            "Keep grinding (the skills, not the teeth)! ⚡"
+        ]
+    }
 };
