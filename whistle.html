@@ -55,7 +55,7 @@
             transform: scale(0.8);
         }
 
-        /* Sparkle Effect */
+        /* Purple Sparkle Effect */
         .sparkle {
             position: fixed;
             pointer-events: none;
@@ -69,7 +69,7 @@
                 transform: translate(-50%, -50%) scale(0) rotate(0deg);
             }
             50% {
-                opacity: 0.8;
+                opacity: 0.9;
             }
             100% {
                 opacity: 0;
@@ -81,23 +81,23 @@
         .sparkle::after {
             content: '';
             position: absolute;
-            background: white;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
-                        0 0 20px rgba(124, 58, 237, 0.4),
-                        0 0 30px rgba(124, 58, 237, 0.2);
+            background: linear-gradient(135deg, #7C3AED, #A78BFA);
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.8),
+                        0 0 30px rgba(124, 58, 237, 0.6),
+                        0 0 45px rgba(124, 58, 237, 0.4);
         }
 
         .sparkle::before {
-            width: 20px;
-            height: 2px;
+            width: 25px;
+            height: 3px;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
 
         .sparkle::after {
-            width: 2px;
-            height: 20px;
+            width: 3px;
+            height: 25px;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -133,13 +133,13 @@
         .section {
             position: relative;
             opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(80px) scale(0.95);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .section.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
         .section-container {
@@ -199,10 +199,6 @@
             display: block;
         }
 
-        .hero-image img.loaded {
-            opacity: 1;
-        }
-
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -214,14 +210,24 @@
             }
         }
 
-        /* CTA Section Below Hero - HORIZONTAL LAYOUT */
+        /* CTA Section - ALWAYS HORIZONTAL with Glassmorphism */
         .cta-section {
-            background: white;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 25px 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.1);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .cta-section.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
         }
 
         .cta-buttons {
@@ -244,32 +250,60 @@
             align-items: center;
             gap: 10px;
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
         }
 
+        /* Glassmorphism for Primary Button */
         .cta-primary {
-            background: linear-gradient(135deg, var(--purple-primary), var(--purple-dark));
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(91, 33, 182, 0.9));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-primary:hover::before {
+            left: 100%;
         }
 
         .cta-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(124, 58, 237, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.5);
         }
 
+        /* Glassmorphism for Secondary Button */
         .cta-secondary {
-            background: white;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: var(--purple-primary);
-            border: 2px solid var(--purple-primary);
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.5);
         }
 
         .cta-secondary:hover {
-            background: var(--purple-primary);
-            color: white;
-            transform: translateY(-2px);
+            background: rgba(124, 58, 237, 0.1);
+            border-color: var(--purple-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.2);
         }
 
-        /* Stats Bar */
+        /* Stats Bar - 2x2 Grid */
         .stats-bar {
             background: white;
             padding: 60px 0;
@@ -277,10 +311,10 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 50px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
             text-align: center;
-            max-width: 1000px;
+            max-width: 700px;
             margin: 0 auto;
         }
 
@@ -297,11 +331,11 @@
         @keyframes popIn {
             from {
                 opacity: 0;
-                transform: scale(0.8);
+                transform: scale(0.8) rotate(-5deg);
             }
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: scale(1) rotate(0deg);
             }
         }
 
@@ -321,112 +355,129 @@
             font-weight: 500;
         }
 
-        /* Image Sections */
-        .image-section {
-            padding: 60px 0;
+        /* Content Sections with Text */
+        .content-section {
+            padding: 80px 0;
             position: relative;
         }
 
-        .image-section:nth-child(even) {
-            background: linear-gradient(135deg, var(--green-light) 0%, #FEF3C7 100%);
+        .content-section:nth-child(even) {
+            background: linear-gradient(135deg, #F3E8FF 0%, #FEF3C7 100%);
         }
 
-        .image-section .section-container {
-            max-width: 1000px;
-            margin: 0 auto;
+        .content-section:nth-child(odd) {
+            background: linear-gradient(135deg, #DBEAFE 0%, #D1FAE5 100%);
         }
 
-        .image-section img {
-            width: 100%;
-            max-width: 900px;
-            height: auto;
-            border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease, opacity 0.6s ease;
-            margin: 0 auto;
-            display: block;
-        }
-
-        .image-section img.loaded {
-            opacity: 1;
-        }
-
-        .image-section:hover img {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Feature Cards */
-        .feature-grid {
+        .content-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            padding: 80px 0;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .feature-card.visible {
-            animation: slideInUp 0.6s ease-out forwards;
-        }
-
-        .feature-card:nth-child(1) { animation-delay: 0.1s; }
-        .feature-card:nth-child(2) { animation-delay: 0.2s; }
-        .feature-card:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes slideInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(124, 58, 237, 0.2);
-        }
-
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
-            border-radius: 16px;
-            display: flex;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .feature-icon svg {
-            width: 32px;
-            height: 32px;
-            stroke: white;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .feature-card h3 {
-            font-size: 22px;
-            font-weight: 700;
+        .content-text h2 {
+            font-size: 48px;
+            font-weight: 900;
             color: var(--purple-dark);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .content-text h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--purple-primary);
+            margin-bottom: 16px;
+        }
+
+        .content-text p {
+            font-size: 18px;
+            color: #4B5563;
+            line-height: 1.8;
             margin-bottom: 12px;
         }
 
-        .feature-card p {
-            color: #6B7280;
-            line-height: 1.6;
-            font-size: 15px;
+        .content-text ul {
+            list-style: none;
+            margin-top: 20px;
         }
 
-        /* Process Timeline */
+        .content-text li {
+            font-size: 18px;
+            color: #374151;
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .content-text li::before {
+            content: '●';
+            position: absolute;
+            left: 0;
+            color: var(--purple-primary);
+            font-size: 24px;
+        }
+
+        .content-visual {
+            position: relative;
+        }
+
+        .content-visual img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Feature Pills */
+        .feature-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .pill {
+            background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
+            color: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .pill:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5);
+        }
+
+        /* CTA Buttons in Sections */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 35px;
+            background: linear-gradient(135deg, var(--green-primary), #059669);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 25px;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.6);
+        }
+
+        /* Timeline Section */
         .timeline {
             padding: 100px 0;
             background: linear-gradient(180deg, #F9FAFB 0%, #FFF 100%);
@@ -437,6 +488,13 @@
             font-size: 48px;
             font-weight: 900;
             color: var(--purple-dark);
+            margin-bottom: 20px;
+        }
+
+        .timeline-subtitle {
+            text-align: center;
+            font-size: 20px;
+            color: #6B7280;
             margin-bottom: 60px;
         }
 
@@ -553,7 +611,9 @@
         }
 
         .enquiry-form {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 50px;
             border-radius: 24px;
             box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
@@ -609,21 +669,6 @@
             box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
         }
 
-        .form-group input.error {
-            border-color: #EF4444;
-        }
-
-        .error-message {
-            color: #EF4444;
-            font-size: 14px;
-            margin-top: 6px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
         .form-submit {
             width: 100%;
             padding: 18px;
@@ -641,33 +686,6 @@
         .form-submit:hover {
             transform: translateY(-2px);
             box-shadow: 0 15px 40px rgba(124, 58, 237, 0.4);
-        }
-
-        .form-submit:active {
-            transform: translateY(0);
-        }
-
-        .form-submit:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        #form-message {
-            margin-top: 20px;
-            padding: 16px;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .form-success {
-            background: #D1FAE5;
-            color: #065F46;
-        }
-
-        .form-error {
-            background: #FEE2E2;
-            color: #991B1B;
         }
 
         /* Footer */
@@ -698,6 +716,26 @@
         }
 
         /* Responsive Mobile */
+        @media (max-width: 968px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .content-text h2 {
+                font-size: 36px;
+            }
+
+            .content-text h3 {
+                font-size: 24px;
+            }
+
+            .content-text p,
+            .content-text li {
+                font-size: 16px;
+            }
+        }
+
         @media (max-width: 768px) {
             body {
                 cursor: auto;
@@ -707,18 +745,19 @@
                 display: none;
             }
 
+            /* KEEP BUTTONS HORIZONTAL ON MOBILE */
             .cta-buttons {
-                flex-direction: column;
-                gap: 15px;
-                padding: 0 20px;
+                flex-direction: row;
+                gap: 12px;
+                padding: 0 15px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
             }
 
             .cta-primary, .cta-secondary {
-                width: 100%;
-                max-width: 350px;
-                justify-content: center;
-                padding: 14px 30px;
-                font-size: 16px;
+                padding: 12px 24px;
+                font-size: 14px;
+                flex-shrink: 0;
             }
 
             .hero {
@@ -727,7 +766,6 @@
             }
 
             .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
                 gap: 30px;
             }
 
@@ -739,17 +777,8 @@
                 font-size: 14px;
             }
 
-            .image-section {
-                padding: 40px 0;
-            }
-
-            .image-section .section-container {
-                padding: 0 15px;
-            }
-
-            .image-section img {
-                max-width: 100%;
-                border-radius: 12px;
+            .content-section {
+                padding: 50px 0;
             }
 
             .timeline {
@@ -758,6 +787,11 @@
 
             .timeline-title {
                 font-size: 28px;
+                margin-bottom: 10px;
+            }
+
+            .timeline-subtitle {
+                font-size: 16px;
                 margin-bottom: 40px;
             }
 
@@ -768,38 +802,6 @@
 
             .timeline-steps::before {
                 display: none;
-            }
-
-            .step-number {
-                width: 70px;
-                height: 70px;
-                font-size: 28px;
-            }
-
-            .step-title {
-                font-size: 18px;
-            }
-
-            .step-desc {
-                font-size: 14px;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-                padding: 50px 0;
-                gap: 20px;
-            }
-
-            .feature-card {
-                padding: 30px;
-            }
-
-            .feature-card h3 {
-                font-size: 20px;
-            }
-
-            .feature-card p {
-                font-size: 14px;
             }
 
             .enquiry-section {
@@ -818,54 +820,6 @@
             .enquiry-form {
                 padding: 30px 20px;
             }
-
-            .form-group {
-                margin-bottom: 20px;
-            }
-
-            .form-group label {
-                font-size: 14px;
-            }
-
-            .form-group input,
-            .form-group textarea {
-                padding: 14px;
-                font-size: 15px;
-            }
-
-            .phone-input-wrapper {
-                flex-direction: row;
-            }
-
-            .country-code {
-                padding: 14px 16px;
-                font-size: 15px;
-            }
-
-            .form-submit {
-                padding: 16px;
-                font-size: 16px;
-            }
-
-            .footer p {
-                font-size: 14px;
-                padding: 0 20px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-
-            .timeline-title {
-                font-size: 24px;
-            }
-
-            .enquiry-title {
-                font-size: 24px;
-            }
         }
     </style>
 </head>
@@ -881,14 +835,14 @@
         <div class="section-container">
             <div class="hero-content">
                 <div class="hero-image">
-                    <img src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Home%20Page%20banner_.png" alt="Whistle Orthodontic Solutions">
+                    <img src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Home%20Page%20banner_.png" alt="Whistle Smart Orthodontic Practices" class="loaded">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section - HORIZONTAL LAYOUT -->
-    <section class="cta-section">
+    <!-- CTA Section - Sticky with Auto-hide at Bottom -->
+    <section class="cta-section" id="stickyNav">
         <div class="cta-buttons">
             <a href="#enquiry" class="cta-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -909,7 +863,7 @@
         </div>
     </section>
 
-    <!-- Stats Bar -->
+    <!-- Stats Bar - 2x2 Grid -->
     <section class="stats-bar">
         <div class="section-container">
             <div class="stats-grid">
@@ -933,17 +887,45 @@
         </div>
     </section>
 
-    <!-- Image Section: Aligners -->
-    <section class="image-section section">
+    <!-- Section 1: 7-14 Days Turnaround -->
+    <section class="content-section section">
         <div class="section-container">
-            <img data-src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Aligners.jpg" alt="Whistle Clear Aligners" class="lazy">
+            <div class="content-grid">
+                <div class="content-text">
+                    <h2>7-14 Days<br><span style="color: #7C3AED;">From Scan To Start</span></h2>
+                    <p>Shorter turnaround improves case acceptance, treatment momentum, and patient confidence.</p>
+                    <ul>
+                        <li>Optimized Manufacturing Pipelines</li>
+                        <li>Urgent Case Processing Available</li>
+                        <li>Built For High-Volume Clinics</li>
+                    </ul>
+                </div>
+                <div class="content-visual">
+                    <img data-src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Aligners.jpg" alt="Fast Turnaround" class="lazy">
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Image Section: Metal Braces -->
-    <section class="image-section section">
+    <!-- Section 2: Smart Practices -->
+    <section class="content-section section">
         <div class="section-container">
-            <img data-src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Metal%20Braces.png" alt="Metal Self-Ligating Braces" class="lazy">
+            <div class="content-grid">
+                <div class="content-visual">
+                    <img data-src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Metal%20Braces.png" alt="Smart Orthodontic Practices" class="lazy">
+                </div>
+                <div class="content-text">
+                    <h2>Smart Orthodontic<br>Practices</h2>
+                    <h3 style="color: #059669; font-style: italic;">Choose Better Systems</h3>
+                    <a href="#enquiry" class="cta-button">
+                        Start Your First Case
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -951,75 +933,202 @@
     <section class="timeline section">
         <div class="section-container">
             <h2 class="timeline-title">Start In Days, Not Weeks</h2>
+            <p class="timeline-subtitle">3-Step Process</p>
             <div class="timeline-steps">
                 <div class="timeline-step">
                     <div class="step-number">1</div>
-                    <div class="step-title">Clinic Onboarding</div>
-                    <div class="step-desc">Quick registration process</div>
+                    <div class="step-title">Clinic Onboarding Form</div>
+                    <div class="step-desc">Quick registration</div>
                 </div>
                 <div class="timeline-step">
                     <div class="step-number">2</div>
-                    <div class="step-title">Training & Materials</div>
-                    <div class="step-desc">Complete support & resources</div>
+                    <div class="step-title">Access Training & Marketing</div>
+                    <div class="step-desc">Complete resources</div>
                 </div>
                 <div class="timeline-step">
                     <div class="step-number">3</div>
-                    <div class="step-title">Begin Treating</div>
+                    <div class="step-title">Begin Treating Patients</div>
                     <div class="step-desc">Start delivering results</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Image Section: Zirconia Braces -->
-    <section class="image-section section">
-        <div class="section-container">
-            <img data-src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Zirconia%20Braces.png" alt="Zirconia Self-Ligating Braces" class="lazy">
+    <!-- Section 3: Currently Active In -->
+    <section class="content-section section">
+        <div class="section-container" style="text-align: center;">
+            <h2 style="font-size: 48px; font-weight: 900; color: #5B21B6; margin-bottom: 40px;">Currently Active In:</h2>
+            <div class="feature-pills" style="justify-content: center;">
+                <div class="pill">Delhi NCR</div>
+                <div class="pill">Gujarat</div>
+                <div class="pill">Bangalore</div>
+            </div>
         </div>
     </section>
 
-    <!-- Image Section: Glow -->
-    <section class="image-section section">
+    <!-- Section 4: When Fixed Appliances Are The Smarter Choice -->
+    <section class="content-section section">
         <div class="section-container">
-            <img data-src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Glow.jpg" alt="Whistle Glow" class="lazy">
+            <div class="content-grid">
+                <div class="content-visual">
+                    <img data-src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Zirconia%20Braces.png" alt="Fixed Appliances" class="lazy">
+                </div>
+                <div class="content-text">
+                    <h2>When Fixed Appliances Are<br><span style="color: #000;">The Smarter Choice</span></h2>
+                    <h3>Why Braces Still Matter:</h3>
+                    <ul>
+                        <li>Better Control In Complex Cases</li>
+                        <li>Fewer Refinements Compared To Aligners</li>
+                        <li>Reduced Chairside Guesswork</li>
+                        <li>Proven Biomechanics</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="section">
+    <!-- Section 5: Aligners Feature Stack -->
+    <section class="content-section section">
         <div class="section-container">
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2z"/>
-                            <path d="M12 2a10 10 0 0 0 0 20"/>
+            <div class="content-grid">
+                <div class="content-text">
+                    <h2>Aligners Designed To Move Teeth,<br><span style="color: #000;">Not Just Sell Smiles</span></h2>
+                    <h3 style="color: #7C3AED;">Whistle Feature Stack</h3>
+                    <ul>
+                        <li>Laser-Trimmed Clear Aligners</li>
+                        <li>Higher Elasticity Materials</li>
+                        <li>End-To-End Digital Workflow</li>
+                        <li>3D Advanced Tooth Movements</li>
+                    </ul>
+                    <a href="#enquiry" class="cta-button" style="background: linear-gradient(135deg, #7C3AED, #5B21B6);">
+                        Submit An Aligner Case
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
                         </svg>
-                    </div>
-                    <h3>Comprehensive Solutions</h3>
-                    <p>Clear Aligners, Metal & Zirconia Braces, and Professional Teeth Whitening - all from one trusted partner</p>
+                    </a>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10"/>
-                            <polyline points="12 6 12 12 16 14"/>
-                        </svg>
-                    </div>
-                    <h3>Orthodontist-Guided Planning</h3>
-                    <p>20+ in-house orthodontists providing expert case evaluation and treatment planning support</p>
+                <div class="content-visual">
+                    <img data-src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Glow.jpg" alt="Whistle Aligner Case" class="lazy">
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: We Help You Fill Chairs -->
+    <section class="content-section section">
+        <div class="section-container">
+            <div class="content-grid">
+                <div class="content-text">
+                    <h2 style="color: #7C3AED;">We Help You Fill Chairs,</h2>
+                    <h2 style="color: #000;">Not Just Shelves</h2>
+                    <h3>What Clinics Get:</h3>
+                    <ul>
+                        <li>Listing On Whistle Website With 1 Lakh+ Monthly High-Intent Visitors</li>
+                        <li>Qualified Patient Leads</li>
+                        <li>Social Media & Content Support</li>
+                    </ul>
+                    <div class="feature-pills">
+                        <div class="pill" style="background: linear-gradient(135deg, #059669, #047857);">Get Listed With Whistle</div>
                     </div>
-                    <h3>Complete Clinical Support</h3>
-                    <p>7-14 day turnaround, mid-treatment assistance, and dedicated partner success team</p>
+                </div>
+                <div class="content-visual">
+                    <img data-src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Home%20Page%20banner_.png" alt="Marketing Support" class="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 7: Mid-Treatment Surprises -->
+    <section class="content-section section">
+        <div class="section-container" style="text-align: center;">
+            <h2 style="font-size: 48px; font-weight: 900; color: #5B21B6; margin-bottom: 20px;">Designed To Reduce <span style="color: #7C3AED;">Mid-Treatment</span> Surprises</h2>
+            <div class="feature-pills" style="justify-content: center; margin-top: 40px;">
+                <div class="pill">Orthodontist Involved In Planning</div>
+                <div class="pill">Attachment Templates Provided</div>
+                <div class="pill">Predictable Staging Protocols</div>
+                <div class="pill">Less Chairside Adjustments</div>
+                <div class="pill">Better Case Tracking</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 8: Three Core Benefits -->
+    <section class="content-section section">
+        <div class="section-container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px;">
+                <div style="background: rgba(209, 250, 229, 0.6); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="font-size: 24px; font-weight: 700; color: #5B21B6; margin-bottom: 20px;">One Partner,<br>Two Core Solutions</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 10px 0; color: #374151;">● Clear Aligners For Esthetic Cases</li>
+                        <li style="padding: 10px 0; color: #374151;">● Metal & Zirconia Braces For Mechanical Control</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(209, 250, 229, 0.6); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="font-size: 24px; font-weight: 700; color: #5B21B6; margin-bottom: 20px;">Clinically Grounded<br>Planning</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 10px 0; color: #374151;">● Orthodontist-Guided Case Evaluation</li>
+                        <li style="padding: 10px 0; color: #374151;">● AI + Human Oversight</li>
+                        <li style="padding: 10px 0; color: #374151;">● Doctor And Patient POV Built In</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(209, 250, 229, 0.6); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="font-size: 24px; font-weight: 700; color: #5B21B6; margin-bottom: 20px;">Support Beyond<br>Manufacturing</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 10px 0; color: #374151;">● Ongoing Treatment Assistance</li>
+                        <li style="padding: 10px 0; color: #374151;">● Case-Level Accountability</li>
+                        <li style="padding: 10px 0; color: #374151;">● Dedicated Partner Support Team</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 9: Why Clinics Partner -->
+    <section class="content-section section">
+        <div class="section-container" style="text-align: center;">
+            <h2 style="font-size: 48px; font-weight: 900; color: #000; margin-bottom: 20px;">Why Clinics Partner With <span style="color: #7C3AED;">Whistle</span></h2>
+            <p style="font-size: 24px; color: #374151; margin-bottom: 40px; font-weight: 600;">Not Just Products. A Complete Orthodontic System</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-top: 60px;">
+                <div>
+                    <div style="width: 150px; height: 150px; background: linear-gradient(135deg, #7C3AED, #A78BFA); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 40px rgba(124,58,237,0.3);">
+                        <span style="font-size: 60px; color: white; font-weight: 900;">A</span>
+                    </div>
+                    <h3 style="font-size: 24px; font-weight: 700; color: #fff; background: #7C3AED; padding: 15px; border-radius: 12px;">Aligners</h3>
+                </div>
+                <div>
+                    <div style="width: 150px; height: 150px; background: linear-gradient(135deg, #7C3AED, #A78BFA); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 40px rgba(124,58,237,0.3);">
+                        <span style="font-size: 60px; color: white; font-weight: 900;">B</span>
+                    </div>
+                    <h3 style="font-size: 24px; font-weight: 700; color: #fff; background: #7C3AED; padding: 15px; border-radius: 12px;">Braces</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 10: Final Pitch -->
+    <section class="content-section section">
+        <div class="section-container">
+            <div class="content-grid">
+                <div class="content-visual">
+                    <img data-src="https://email-editor-resources.s3.amazonaws.com/images/82618240/Whistle/Aligners.jpg" alt="Predictable Orthodontics" class="lazy">
+                </div>
+                <div class="content-text">
+                    <h2 style="color: #000;">Aligners And Braces,</h2>
+                    <h2 style="color: #7C3AED; font-style: italic;">Engineered For Predictable Orthodontics</h2>
+                    <ul>
+                        <li><strong>Clear Aligners + Fixed Braces</strong></li>
+                        <li><strong>AI-Enabled</strong> Treatment Planning</li>
+                        <li><strong>7-14 Day</strong> Turnaround Time</li>
+                        <li>Designed <strong>For Indian</strong> Practices</li>
+                    </ul>
+                    <a href="#enquiry" class="cta-button" style="background: linear-gradient(135deg, #10B981, #059669);">
+                        Talk To A Whistle Expert
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
@@ -1053,7 +1162,6 @@
                         <span class="country-code">+91</span>
                         <input type="tel" id="phone" name="phone" required placeholder="98765 43210" maxlength="10" pattern="[6-9][0-9]{9}">
                     </div>
-                    <div class="error-message" id="phone-error">Please enter a valid 10-digit mobile number</div>
                 </div>
 
                 <div class="form-group">
@@ -1067,8 +1175,6 @@
                 </div>
 
                 <button type="submit" class="form-submit">Submit Partnership Enquiry</button>
-
-                <div id="form-message" style="display: none;"></div>
             </form>
         </div>
     </section>
@@ -1091,7 +1197,7 @@
             });
         }
 
-        // Lazy load other images when they come into view
+        // Lazy load other images
         const lazyImages = document.querySelectorAll('img.lazy');
 
         const imageObserver = new IntersectionObserver((entries) => {
@@ -1152,7 +1258,7 @@
             });
         }
 
-        // Sparkle Effect
+        // Purple Sparkle Effect
         let lastSparkleTime = 0;
         const sparkleDelay = 100;
 
@@ -1195,27 +1301,20 @@
             }
         }, { passive: true });
 
-        // Phone validation
-        const phoneInput = document.getElementById('phone');
-        const phoneError = document.getElementById('phone-error');
+        // Hide sticky nav when reaching bottom
+        const stickyNav = document.getElementById('stickyNav');
+        const footer = document.querySelector('.footer');
 
-        phoneInput.addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
+        window.addEventListener('scroll', () => {
+            const footerTop = footer.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
 
-            if (this.value.length > 10) {
-                this.value = this.value.slice(0, 10);
-            }
-
-            const isValid = /^[6-9][0-9]{9}$/.test(this.value);
-
-            if (this.value.length === 10 && !isValid) {
-                this.classList.add('error');
-                phoneError.classList.add('show');
+            if (footerTop <= windowHeight) {
+                stickyNav.classList.add('hidden');
             } else {
-                this.classList.remove('error');
-                phoneError.classList.remove('show');
+                stickyNav.classList.remove('hidden');
             }
-        });
+        }, { passive: true });
 
         // Scroll Progress
         window.addEventListener('scroll', () => {
@@ -1226,8 +1325,8 @@
 
         // Section animations
         const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
@@ -1242,31 +1341,19 @@
             observer.observe(section);
         });
 
-        document.querySelectorAll('.feature-card').forEach(card => {
-            observer.observe(card);
-        });
-
         // Form submission
         document.getElementById('enquiry-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const phone = phoneInput.value;
-            if (!/^[6-9][0-9]{9}$/.test(phone)) {
-                phoneInput.classList.add('error');
-                phoneError.classList.add('show');
-                phoneInput.focus();
-                return;
-            }
-
             const submitBtn = this.querySelector('.form-submit');
-            const messageDiv = document.getElementById('form-message');
-
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
 
             const formData = new FormData(this);
+            const phone = formData.get('phone');
             formData.set('phone', '+91' + phone);
 
+            // Replace with your Google Script URL
             const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
 
             fetch(scriptURL, {
@@ -1275,23 +1362,13 @@
                 mode: 'no-cors'
             })
             .then(() => {
-                messageDiv.innerHTML = '✓ Thank you! Our partnership team will contact you within 24 hours.';
-                messageDiv.className = 'form-success';
-                messageDiv.style.display = 'block';
-
+                alert('✓ Thank you! Our partnership team will contact you within 24 hours.');
                 this.reset();
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Partnership Enquiry';
-
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 5000);
             })
             .catch(() => {
-                messageDiv.innerHTML = '✗ Error submitting form. Please email us at partnerships@pinkblue.in';
-                messageDiv.className = 'form-error';
-                messageDiv.style.display = 'block';
-
+                alert('✗ Error submitting form. Please email us at partnerships@pinkblue.in');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Partnership Enquiry';
             });
@@ -1310,27 +1387,6 @@
                 }
             });
         });
-
-        // Parallax (desktop only)
-        if (window.innerWidth > 768) {
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        const scrolled = window.pageYOffset;
-                        document.querySelectorAll('.image-section img').forEach((img, index) => {
-                            if (img.classList.contains('loaded')) {
-                                const speed = 0.08;
-                                const yPos = scrolled * speed * (index % 2 === 0 ? 1 : -1) * 0.03;
-                                img.style.transform = `translateY(${yPos}px)`;
-                            }
-                        });
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            }, { passive: true });
-        }
     </script>
 </body>
 </html>
