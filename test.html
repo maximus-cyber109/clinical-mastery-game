@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7C3AED">
+    <title>Whistle Aligners & Braces - Partner with Us</title>
+
+    <!-- Preload Hero Image -->
+    <link rel="preload" as="image" href="https://bwuercsdytqsvjgpntjn.supabase.co/storage/v1/object/public/Whistle/Homepage%20banner.png" fetchpriority="high">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --purple-primary: #7C3AED;
+            --purple-dark: #5B21B6;
+            --purple-light: #A78BFA;
+            --green-primary: #10B981;
+            --green-light: #D1FAE5;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+            background: #fff;
+            color: #1F2937;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(124, 58, 237, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s ease;
+            mix-blend-mode: difference;
+        }
+
+        /* Purple Sparkles */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            animation: sparkleAnimation 0.8s ease-out forwards;
+        }
+
+        @keyframes sparkleAnimation {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0) rotate(0deg);
+            }
+            50% { opacity: 0.9; }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.5) rotate(180deg);
+            }
+        }
+
+        .sparkle::before,
+        .sparkle::after {
+            content: '';
+            position: absolute;
+            background: linear-gradient(135deg, #7C3AED, #A78BFA);
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.8),
+                        0 0 30px rgba(124, 58, 237, 0.6);
+        }
+
+        .sparkle::before {
+            width: 25px;
+            height: 3px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .sparkle::after {
+            width: 3px;
+            height: 25px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Image Lazy Loading */
+        img {
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        img.loaded {
+            opacity: 1;
+        }
+
+        img.loading {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .section {
+            position: relative;
+            opacity: 0;
+            transform: translateY(80px) scale(0.95);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #F3E8FF 0%, #DBEAFE 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 40px 0;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* Sticky CTA Section */
+        .cta-section {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 25px 0;
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.1);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .cta-section.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .cta-buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-primary, .cta-secondary {
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        /* Glassmorphism Buttons */
+        .cta-primary {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(91, 33, 182, 0.9));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-primary:hover::before {
+            left: 100%;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.5);
+        }
+
+        .cta-secondary {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--purple-primary);
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .cta-secondary:hover {
+            background: rgba(124, 58, 237, 0.1);
+            border-color: var(--purple-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.2);
+        }
+
+        /* Stats Bar - 2x2 Grid */
+        .stats-bar {
+            background: white;
+            padding: 60px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            opacity: 0;
+            animation: popIn 0.6s ease-out forwards;
+        }
+
+        .stat-item:nth-child(1) { animation-delay: 0.1s; }
+        .stat-item:nth-child(2) { animation-delay: 0.2s; }
+        .stat-item:nth-child(3) { animation-delay: 0.3s; }
+        .stat-item:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) rotate(-5deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .stat-number {
+            font-size: 52px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--purple-primary), #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #6B7280;
+            font-weight: 500;
+        }
+
+        /* Content Sections */
+        .content-section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .content-section:nth-child(even) {
+            background: linear-gradient(135deg, #F3E8FF 0%, #FEF3C7 100%);
+        }
+
+        .content-section:nth-child(odd) {
+            background: linear-gradient(135deg, #DBEAFE 0%, #D1FAE5 100%);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .content-text h2 {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--purple-dark);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .content-text h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--purple-primary);
+            margin-bottom: 16px;
+        }
+
+        .content-text p {
+            font-size: 18px;
+            color: #4B5563;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .content-text ul {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .content-text li {
+            font-size: 18px;
+            color: #374151;
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .content-text li::before {
+            content: '●';
+            position: absolute;
+            left: 0;
+            color: var(--purple-primary);
+            font-size: 24px;
+        }
+
+        .content-visual img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Timeline Section */
+        .timeline {
+            padding: 100px 0;
+            background: linear-gradient(180deg, #F9FAFB 0%, #FFF 100%);
+        }
+
+        .timeline-title {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--purple-dark);
+            margin-bottom: 20px;
+        }
+
+        .timeline-subtitle {
+            text-align: center;
+            font-size: 20px;
+            color: #6B7280;
+            margin-bottom: 60px;
+        }
+
+        .timeline-steps {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--purple-primary), var(--green-primary));
+            z-index: 0;
+        }
+
+        .timeline-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border: 4px solid var(--purple-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--purple-primary);
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .timeline-step:nth-child(2) .step-number { animation-delay: 0.3s; }
+        .timeline-step:nth-child(3) .step-number { animation-delay: 0.6s; }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 15px 40px rgba(124, 58, 237, 0.3);
+            }
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--purple-dark);
+            margin-bottom: 10px;
+        }
+
+        .step-desc {
+            color: #6B7280;
+            font-size: 15px;
+        }
+
+        /* CTA Button in Sections */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 35px;
+            background: linear-gradient(135deg, var(--green-primary), #059669);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 25px;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.6);
+        }
+
+        /* Braces Comparison Grid */
+        .braces-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .braces-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .braces-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(124, 58, 237, 0.2);
+        }
+
+        .braces-card img {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .braces-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--purple-dark);
+            margin-bottom: 15px;
+        }
+
+        .braces-card p {
+            font-size: 16px;
+            color: #6B7280;
+            line-height: 1.6;
+        }
+
+        /* Enquiry Form */
+        .enquiry-section {
+            background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple-primary) 100%);
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .enquiry-section::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -300px;
+            left: -300px;
+        }
+
+        .enquiry-content {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding: 0 20px;
+        }
+
+        .enquiry-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: white;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .enquiry-subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .enquiry-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 50px;
+            border-radius: 24px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .phone-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .country-code {
+            padding: 16px 20px;
+            background: #F3F4F6;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+            white-space: nowrap;
+        }
+
+        .phone-input-wrapper input {
+            flex: 1;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--purple-primary);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--purple-primary), var(--purple-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+        }
+
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(124, 58, 237, 0.4);
+        }
+
+        .form-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background: #1F2937;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer p {
+            font-size: 16px;
+            opacity: 0.8;
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--purple-primary), var(--green-primary));
+            z-index: 9999;
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .braces-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-text h2 {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+
+            .custom-cursor {
+                display: none;
+            }
+
+            .cta-buttons {
+                flex-direction: row;
+                gap: 12px;
+                padding: 0 15px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+
+            .cta-primary, .cta-secondary {
+                padding: 12px 24px;
+                font-size: 14px;
+                flex-shrink: 0;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 30px 0;
+            }
+
+            .stats-grid {
+                gap: 30px;
+            }
+
+            .stat-number {
+                font-size: 40px;
+            }
+
+            .content-section {
+                padding: 50px 0;
+            }
+
+            .timeline {
+                padding: 60px 0;
+            }
+
+            .timeline-title {
+                font-size: 28px;
+            }
+
+            .timeline-steps {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .timeline-steps::before {
+                display: none;
+            }
+
+            .enquiry-section {
+                padding: 60px 0;
+            }
+
+            .enquiry-title {
+                font-size: 28px;
+            }
+
+            .enquiry-form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="cursor"></div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="section-container">
+            <div class="hero-image">
+                <img src="https://bwuercsdytqsvjgpntjn.supabase.co/storage/v1/object/public/Whistle/Homepage%20banner.png" alt="Whistle Smart Orthodontic Practices" class="loaded">
+            </div>
+        </div>
+    </section>
+
+    <!-- Sticky CTA Section -->
+    <section class="cta-section" id="stickyNav">
+        <div class="cta-buttons">
+            <a href="#enquiry" class="cta-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <line x1="19" y1="8" x2="19" y2="14"/>
+                    <line x1="22" y1="11" x2="16" y2="11"/>
+                </svg>
+                Partner With Us
+            </a>
+            <a href="https://pinkblue.in/brand/whistle" target="_blank" class="cta-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                View Products
+            </a>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="stats-bar">
+        <div class="section-container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">5L+</div>
+                    <div class="stat-label">Aligners Delivered</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1L+</div>
+                    <div class="stat-label">Smiles Designed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1100+</div>
+                    <div class="stat-label">Partner Clinics</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">20+</div>
+                    <div class="stat-label">In-House Orthodontists</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Aligners Section -->
+    <section class="content-section section">
+        <div class="section-container">
+            <div class="content-grid">
+                <div class="content-visual">
+                    <img data-src="https://bwuercsdytqsvjgpntjn.supabase.co/storage/v1/object/public/Whistle/Aligners%20(1).jpg" alt="Whistle Clear Aligners" class="lazy">
+                </div>
+                <div class="content-text">
+                    <h2>Whistle<br><span style="color: #7C3AED;">Clear Aligners</span></h2>
+                    <h3>The Invisible Solution For Your Confident Smile</h3>
+                    <p>Laser-trimmed clear aligners engineered for predictable tooth movements with higher elasticity materials and end-to-end digital workflow.</p>
+                    <a href="#enquiry" class="cta-button">
+                        Start Your First Case
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline section">
+        <div class="section-container">
+            <h2 class="timeline-title">Start In Days, Not Weeks</h2>
+            <p class="timeline-subtitle">3-Step Process</p>
+            <div class="timeline-steps">
+                <div class="timeline-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Clinic Onboarding</div>
+                    <div class="step-desc">Quick registration & setup</div>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Access Training</div>
+                    <div class="step-desc">Complete resources & marketing</div>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Begin Treating</div>
+                    <div class="step-desc">Start delivering results</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Buy Aligners -->
+    <section class="content-section section">
+        <div class="section-container">
+            <div class="content-grid">
+                <div class="content-text">
+                    <h2>Why Choose<br><span style="color: #7C3AED;">Whistle Aligners?</span></h2>
+                    <ul>
+                        <li><strong>7-14 Day Turnaround Time</strong> - Faster case acceptance and treatment momentum</li>
+                        <li><strong>Orthodontist-Guided Planning</strong> - AI + Human expertise for every case</li>
+                        <li><strong>Predictable Staging Protocols</strong> - Designed to reduce mid-treatment surprises</li>
+                        <li><strong>Higher Elasticity Materials</strong> - Better control and comfort</li>
+                        <li><strong>End-To-End Digital Workflow</strong> - Seamless integration with your practice</li>
+                        <li><strong>Only Through Clinics</strong> - Always delivered through authorized dental clinics</li>
+                    </ul>
+                </div>
+                <div class="content-visual">
+                    <img data-src="https://bwuercsdytqsvjgpntjn.supabase.co/storage/v1/object/public/Whistle/Aligners%20(1).jpg" alt="Why Whistle Aligners" class="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Braces Section -->
+    <section class="content-section section">
+        <div class="section-container" style="text-align: center;">
+            <h2 style="font-size: 48px; font-weight: 900; color: #5B21B6; margin-bottom: 20px;">When Fixed Appliances Are<br><span style="color: #000;">The Smarter Choice</span></h2>
+            <p style="font-size: 20px; color: #6B7280; margin-bottom: 50px;">Choose between Metal & Zirconia Braces for complete mechanical control</p>
+
+            <div class="braces-grid">
+                <div class="braces-card">
+                    <img data-src="https://bwuercsdytqsvjgpntjn.supabase.co/storage/v1/object/public/Whistle/Metal%20Braces%20(1).png" alt="Metal Braces" class="lazy">
+                    <h3>Metal Braces</h3>
+                    <p>Time-tested reliability with superior strength for complex cases. Better control in challenging orthodontic treatments.</p>
+                </div>
+                <div class="braces-card">
+                    <img data-src="https://bwuercsdytqsvjgpntjn.supabase.co/storage/v1/object/public/Whistle/Zirconia%20Braces%20(1).png" alt="Zirconia Braces" class="lazy">
+                    <h3>Zirconia Braces</h3>
+                    <p>Aesthetic appeal with ceramic strength. Perfect blend of cosmetic appearance and mechanical efficiency.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Buy Braces -->
+    <section class="content-section section">
+        <div class="section-container">
+            <div class="content-grid">
+                <div class="content-visual">
+                    <img data-src="https://bwuercsdytqsvjgpntjn.supabase.co/storage/v1/object/public/Whistle/Metal%20Braces%20(1).png" alt="Why Whistle Braces" class="lazy">
+                </div>
+                <div class="content-text">
+                    <h2>Why Choose<br><span style="color: #7C3AED;">Whistle Braces?</span></h2>
+                    <h3>Braces Still Matter:</h3>
+                    <ul>
+                        <li><strong>Better Control In Complex Cases</strong> - Superior biomechanics for challenging treatments</li>
+                        <li><strong>Fewer Refinements</strong> - More predictable outcomes compared to aligners</li>
+                        <li><strong>Reduced Chairside Guesswork</strong> - Proven mechanics and attachment protocols</li>
+                        <li><strong>Proven Biomechanics</strong> - Decades of clinical research backing</li>
+                        <li><strong>Attachment Templates Provided</strong> - Standardized clinical protocols</li>
+                        <li><strong>Only Through Clinics</strong> - Always delivered through authorized dental clinics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Partner with Whistle -->
+    <section class="content-section section">
+        <div class="section-container" style="text-align: center;">
+            <h2 style="font-size: 48px; font-weight: 900; color: #5B21B6; margin-bottom: 40px;">Why Partner With <span style="color: #7C3AED;">Whistle?</span></h2>
+
+            <div style="max-width: 1000px; margin: 0 auto; text-align: left;">
+                <div style="background: rgba(255, 255, 255, 0.9); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                    <h3 style="font-size: 28px; font-weight: 700; color: #5B21B6; margin-bottom: 20px;"> We Help You Fill Chairs, Not Just Shelves</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 12px 0; font-size: 18px; color: #374151;">
+                            <strong>✓ Listing On Whistle Website</strong> - 1 Lakh+ monthly high-intent visitors
+                        </li>
+                        <li style="padding: 12px 0; font-size: 18px; color: #374151;">
+                            <strong>✓ Qualified Patient Leads</strong> - Pre-screened orthodontic prospects
+                        </li>
+                        <li style="padding: 12px 0; font-size: 18px; color: #374151;">
+                            <strong>✓ Social Media & Content Support</strong> - Professional marketing materials
+                        </li>
+                        <li style="padding: 12px 0; font-size: 18px; color: #374151;">
+                            <strong>✓ Dedicated Partner Success Team</strong> - Ongoing treatment assistance
+                        </li>
+                        <li style="padding: 12px 0; font-size: 18px; color: #374151;">
+                            <strong>✓ Case-Level Accountability</strong> - Support beyond manufacturing
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #D1FAE5, #FEF3C7); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="font-size: 28px; font-weight: 700; color: #5B21B6; margin-bottom: 20px;"> Complete Orthodontic System</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 12px 0; font-size: 18px; color: #374151;">
+                            <strong>✓ One Partner, Two Solutions</strong> - Clear aligners + Metal & Zirconia braces
+                        </li>
+                        <li style="padding: 12px 0; font-size: 18px; color: #374151;">
+                            <strong>✓ Clinically Grounded Planning</strong> - Orthodontist-guided case evaluation
+                        </li>
+                        <li style="padding: 12px 0; font-size: 18px; color: #374151;">
+                            <strong>✓ AI + Human Oversight</strong> - Technology meets expertise
+                        </li>
+                        <li style="padding: 12px 0; font-size: 18px; color: #374151;">
+                            <strong>✓ Doctor & Patient POV Built In</strong> - Designed for Indian practices
+                        </li>
+                        <li style="padding: 12px 0; font-size: 18px; color: #374151;">
+                            <strong>✓ Only Through Clinics</strong> - Always delivered through authorized dental clinics
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <a href="#enquiry" class="cta-button" style="margin-top: 40px; background: linear-gradient(135deg, #7C3AED, #5B21B6);">
+                Get Listed With Whistle
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Enquiry Form -->
+    <section class="enquiry-section" id="enquiry">
+        <div class="enquiry-content">
+            <h2 class="enquiry-title">Partner With Us Today</h2>
+            <p class="enquiry-subtitle">Join 1100+ dental clinics delivering exceptional orthodontic care</p>
+
+            <form class="enquiry-form" id="enquiryForm">
+                <div class="form-group">
+                    <label for="clinic-name">Clinic Name *</label>
+                    <input type="text" id="clinic-name" name="clinic_name" required placeholder="Enter your clinic name">
+                </div>
+
+                <div class="form-group">
+                    <label for="doctor-name">Doctor Name *</label>
+                    <input type="text" id="doctor-name" name="doctor_name" required placeholder="Dr. [Your Name]">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required placeholder="doctor@yourclinic.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <div class="phone-input-wrapper">
+                        <span class="country-code">+91</span>
+                        <input type="tel" id="phone" name="phone" required placeholder="98765 43210" maxlength="10" pattern="[6-9][0-9]{9}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City / Location *</label>
+                    <input type="text" id="city" name="city" required placeholder="Enter your city">
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Tell us about your practice (Optional)</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Average monthly patient footfall, current orthodontic services offered, etc."></textarea>
+                </div>
+
+                <button type="submit" class="form-submit" id="submitBtn">Submit Partnership Enquiry</button>
+
+                <div class="success-message" id="successMessage">
+                    ✓ Thank you! Our partnership team will contact you within 24 hours.
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <p>Get Whistle Today</p>
+        </div>
+    </footer>
+
+    <script>
+        // Image Loading
+        const heroImg = document.querySelector('.hero-image img');
+        if (heroImg.complete) {
+            heroImg.classList.add('loaded');
+        }
+
+        const lazyImages = document.querySelectorAll('img.lazy');
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.classList.remove('lazy');
+                    img.classList.add('loading');
+
+                    img.addEventListener('load', () => {
+                        img.classList.remove('loading');
+                        img.classList.add('loaded');
+                    });
+
+                    imageObserver.unobserve(img);
+                }
+            });
+        }, { rootMargin: '100px' });
+
+        lazyImages.forEach(img => imageObserver.observe(img));
+
+        // Custom Cursor (Desktop)
+        if (window.innerWidth > 768) {
+            const cursor = document.getElementById('cursor');
+            let mouseX = 0, mouseY = 0;
+            let cursorX = 0, cursorY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animateCursor() {
+                const dx = mouseX - cursorX;
+                const dy = mouseY - cursorY;
+                cursorX += dx * 0.2;
+                cursorY += dy * 0.2;
+                cursor.style.left = cursorX + 'px';
+                cursor.style.top = cursorY + 'px';
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+        }
+
+        // Purple Sparkles
+        let lastSparkleTime = 0;
+        function createSparkle(x, y) {
+            const now = Date.now();
+            if (now - lastSparkleTime < 100) return;
+            lastSparkleTime = now;
+
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 800);
+        }
+
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth > 768) {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = window.scrollY + Math.random() * window.innerHeight;
+                    createSparkle(x, y);
+                }, 50);
+            }
+        }, { passive: true });
+
+        document.addEventListener('click', (e) => {
+            createSparkle(e.clientX, e.clientY);
+        });
+
+        // Hide sticky nav at bottom
+        const stickyNav = document.getElementById('stickyNav');
+        const footer = document.querySelector('.footer');
+
+        window.addEventListener('scroll', () => {
+            const footerTop = footer.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+
+            if (footerTop <= windowHeight) {
+                stickyNav.classList.add('hidden');
+            } else {
+                stickyNav.classList.remove('hidden');
+            }
+        }, { passive: true });
+
+        // Scroll Progress
+        window.addEventListener('scroll', () => {
+            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (window.scrollY / windowHeight) * 100;
+            document.getElementById('scrollProgress').style.transform = `scaleX(${scrolled / 100})`;
+        }, { passive: true });
+
+        // Section animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Form submission - IN-PAGE
+        document.getElementById('enquiryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            const formData = new FormData(this);
+            const phone = formData.get('phone');
+            formData.set('phone', '+91' + phone);
+
+            // Replace with your Google Script URL
+            const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+
+            fetch(scriptURL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            })
+            .then(() => {
+                // Show success message IN-PAGE
+                successMessage.classList.add('show');
+                this.reset();
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Partnership Enquiry';
+
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 5000);
+            })
+            .catch(() => {
+                alert('Error submitting form. Please email us at partnerships@pinkblue.in');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Partnership Enquiry';
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
